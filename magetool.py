@@ -1,23 +1,52 @@
 #!/usr/bin/env python
+#
+# Copyright (c) 2009, Jacob Kragh
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above
+#    copyright notice, this list of conditions and the following
+#    disclaimer in the documentation and/or other materials
+#    provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+# FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+# COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+# ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
 
+"""Utility to automate repetitive tasks in Mage development."""
+
+__author__ = "jhckragh@gmail.com (Jacob Kragh)"
 __version__ = "0.1.0"
 
 from optparse import OptionParser
 
 def main():
-    usage = "usage: %prog COMMAND [ARGS] [OPTION]"
+    usage = "Usage: %prog [OPTION] create [block|controller|helper|model] NAME"
     version = "%prog version " + __version__
     parser = OptionParser(usage=usage, version=version)
     parser.add_option("-o", action="store_true", dest="override", default=None,
-                      help="in conjunction with 'magetool -s SUPERCLASS " +
-                      "create [block|model|helper]', tell Mage that the " +
+                      help="if creating a block, model, or a helper and " +
+                      "-s SUPERCLASS is supplied, tell Mage that the " +
                       "created class overrides SUPERCLASS.")
-    parser.add_option("-s", dest="superclass",
-                      help="extend SUPERCLASS.", metavar="SUPERCLASS")
-    parser.add_option("-r", dest="router",
+    parser.add_option("-s", dest="superclass", metavar="SUPERCLASS",
+                      help="make created class extend SUPERCLASS.")
+    parser.add_option("-r", dest="router", metavar="ROUTER",
                       help="when creating a route for the module " +
-                      "use ROUTER (standard, admin, or default).",
-                      metavar="ROUTER")
+                      "use ROUTER (standard, admin, or default).")
 
     options, args = parser.parse_args()
     if not len(args) > 1:
