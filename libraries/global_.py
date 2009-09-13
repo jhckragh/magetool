@@ -51,7 +51,7 @@ class Global:
 
         """
         self.superclass = superclass
-        self.register = True
+        self.reg = True
         self.override = override
         self._configure()
 
@@ -126,20 +126,20 @@ class Global:
             tags = (type_tag, module)
             # Check if global classes of type self.type are already registered
             if config.xpath(xpath % tags):
-                self.register = False
+                self.reg = False
             # Check if a rewrite directive already exists
-            tags = (type_tag, self.superclass.split("_")[1].lower())
             if self.override:
+                tags = (type_tag, self.superclass.split("_")[1].lower())
                 if config.xpath(xpath % tags):
                     self.override = False
-        else:
-            global_ = etree.SubElement(config, "global")
 
-        # Make sure type_ exists
+        # Make sure global_ and type_ exist
+        global_ = config.xpath("/config/global")
+        global_ = global_[0] if global_ else etree.SubElement(config, "global")
         type_ = config.xpath("/config/global/%s" % type_tag)
         type_ = type_[0] if type_ else etree.SubElement(global_, type_tag)
 
-        if self.register and not self.override:
+        if self.reg and not self.override:
             module = etree.SubElement(type_, module)
             class_ = etree.SubElement(module, "class")
             class_.text = "%s_%s_%s" % (self.module["namespace"],
@@ -168,3 +168,7 @@ class Global:
                                         self.module["name"],
                                         self.type_name,
                                         self.name)
+
+    def register(self):
+        """Expose the method which updates the configuration file."""
+        self._update_config()
