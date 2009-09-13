@@ -159,7 +159,7 @@ class Global:
         """
         sc_substrings = self.superclass.split("_")
         sc_module = sc_substrings[1].lower()
-        sc_name = "_".join(sc_substrings[2:]).lower() # e.g., "product_view"
+        sc_name = "_".join(sc_substrings[3:]).lower() # e.g., "product_view"
 
         sc_module = etree.SubElement(elem, sc_module)
         rewrite = etree.SubElement(sc_module, "rewrite")

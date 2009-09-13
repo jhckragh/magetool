@@ -27,28 +27,36 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-"""Utility to automate repetitive tasks in Mage development."""
+"""A CLI utility to automate repetitive tasks in Mage development."""
 
 __author__ = "jhckragh@gmail.com (Jacob Kragh)"
 __version__ = "0.1.0"
 
-from optparse import OptionParser
+from optparse import OptionParser, SUPPRESS_HELP
 
 def main():
-    usage = "Usage: %prog [OPTION] create [block|controller|helper|model] NAME"
+    usage = """Usage: magetool [OPTION]... ACTION COMMAND ARG
+
+The following commands are supported:
+    block
+    controller
+    helper
+    model
+    module
+
+See 'magetool help COMMAND' for more information on a specific command."""
     version = "%prog version " + __version__
-    parser = OptionParser(usage=usage, version=version)
-    parser.add_option("-o", action="store_true", dest="override", default=None,
-                      help="if creating a block, model, or a helper and " +
-                      "-s SUPERCLASS is supplied, tell Mage that the " +
-                      "created class overrides SUPERCLASS.")
-    parser.add_option("-s", dest="superclass", metavar="SUPERCLASS",
-                      help="make created class extend SUPERCLASS.")
-    parser.add_option("-r", dest="router", metavar="ROUTER",
-                      help="when creating a route for the module " +
-                      "use ROUTER (standard, admin, or default).")
+    parser = OptionParser(usage=usage, version=version, add_help_option=False)
+    parser.add_option("-h", "--help", action="store_true", dest="show_help")
+    parser.add_option("-o", "--override", action="store_true", dest="override",
+                      default=None)
+    parser.add_option("-s", "--superclass", dest="superclass")
+    parser.add_option("-r", "--router", dest="router")
 
     options, args = parser.parse_args()
+    if options.show_help:
+        print usage
+        return
     if not len(args) > 1:
         parser.error("incorrect number of arguments")
     kwargs = dict([(k, v) for k, v in options.__dict__.items()

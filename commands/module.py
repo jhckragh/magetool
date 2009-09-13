@@ -100,3 +100,17 @@ class Module:
                                                         self.name), "w")
         dest.write(template)
         dest.close()
+
+    def help(self):
+        """Print a help message describing this command."""
+        print """Usage: magetool create module NAME
+
+Description:
+  Create a module called NAME and register it in ../../../etc/modules/.
+  Note: You must be in a namespace directory (e.g., app/code/local/NAMESPACE/)
+  to invoke this command.
+
+Example:
+  magetool create module NewProduct
+        Create a module skeleton in NewProduct/ and register the module in
+        app/etc/modules/Namespace_NewProduct.xml."""

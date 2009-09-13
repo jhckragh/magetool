@@ -115,3 +115,39 @@ class Controller:
         front_name.text = self.front_name
 
         put_config(config)
+
+    def help(self):
+        """Print a help message describing this command."""
+        print """Usage: magetool create controller NAME
+
+Description:
+  Create a controller called NAME in controllers/ and register it in the
+  module's configuration file. The "Controller" suffix in NAME can be omitted.
+
+Options:
+  -s, --superclass=SUPERCLASS  Make the controller extend SUPERCLASS.
+                               Default: Mage_Core_Controller_Front_Action.
+
+  -r, --router=ROUTER          Use internal router ROUTER to route
+                               requests to this module. Available
+                               routers are: standard, admin, and
+                               default. Default: standard.
+
+Examples:
+  magetool create controller index
+        Create a file called IndexController.php in controllers/ and configure
+        a route in etc/config.xml so Mage can dispatch requests to the module's
+        controller(s). See http://alanstorm.com/magento_controller_hello_world.
+
+  magetool -s Mage_Adminhtml_Controller_Action create controller OrderController
+        Define a PHP class in controllers/OrderController.php which extends
+        the class Mage_Adminhtml_Controller_Action.
+
+  magetool -r admin create controller order
+        Define a PHP class in controllers/OrderController.php and configure
+        a route in etc/config.xml using the "admin" router.
+
+  magetool -r admin -s Mage_Adminhtml_IndexController create controller order
+        Define a PHP class in controllers/OrderController.php which extends
+        the class Mage_Adminhtml_IndexController and configure a route in
+        etc/config.xml using the "admin" router."""
