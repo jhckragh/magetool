@@ -114,7 +114,10 @@ class Global:
         if not self.name.find("_") == -1:
             substrings = self.name.split("_")
             path += os.path.join(*substrings[:-1]) + os.sep
-            os.makedirs(path)
+            try:
+                os.makedirs(path)
+            except OSError:
+                pass # The directories already exist
             name = substrings[-1]
         dest = open(path + name + ".php", "w")
         dest.write(template)
