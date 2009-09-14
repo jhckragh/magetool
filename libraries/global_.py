@@ -33,6 +33,7 @@ Mage.)
 
 """
 
+import os
 from commands.module import Module
 from libraries.core import get_config, put_config
 from lxml import etree
@@ -106,7 +107,16 @@ class Global:
                                        module_name=self.module["name"],
                                        name=self.name,
                                        superclass=self.superclass)
-        dest = open("%s/%s.php" % (self.type_name, self.name), "w")
+        name = self.name
+        path = self.type_name + os.sep
+        # Check if the class name contains underscores. If it does, interpret
+        # them as directory separators.
+        if not self.name.find("_") == -1:
+            substrings = self.name.split("_")
+            path += os.path.join(*substrings[:-1]) + os.sep
+            os.makedirs(path)
+            name = substrings[-1]
+        dest = open(path + name + ".php", "w")
         dest.write(template)
         dest.close()
 
