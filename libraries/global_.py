@@ -97,7 +97,7 @@ class Global:
             end = "Template" if self.type == "block" else "Abstract"
             self.superclass = superclass % (self.type_name, end)
         self._create_class()
-        self._update_config()
+        self.register()
 
     def _create_class(self):
         """Create an empty global class."""
@@ -110,7 +110,7 @@ class Global:
         dest.write(template)
         dest.close()
 
-    def _update_config(self):
+    def register(self):
         """Tell Mage that the module has one or more self.type global classes.
 
         Update the module's configuration file to register that the
@@ -169,6 +169,3 @@ class Global:
                                         self.type_name,
                                         self.name)
 
-    def register(self):
-        """Expose the method which updates the configuration file."""
-        self._update_config()
