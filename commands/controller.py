@@ -27,9 +27,8 @@
 
 import os
 from commands.module import Module
-from libraries.core import get_config, put_config
+from libraries.core import get_config, put_config, fill_tmplt
 from lxml import etree
-from string import Template
 from templates.controller import controller
 
 class Controller:
@@ -80,11 +79,7 @@ class Controller:
 
     def _create_class(self):
         """Create an empty controller class."""
-        template = Template(controller)
-        template = template.substitute(namespace=self.module["namespace"],
-                                       module_name=self.module["name"],
-                                       controller_name=self.name,
-                                       superclass=self.superclass)
+        tmplt = fill_tmplt(controller, self.module, self.name, self.superclass)
         name = self.name
         path = "controllers" + os.sep
         # Check if the class name contains underscores. If it does, interpret
@@ -100,7 +95,7 @@ class Controller:
         dest = path + name + ".php"
         if not os.path.isfile(dest):
             dest = open(dest, "w")
-            dest.write(template)
+            dest.write(tmplt)
             dest.close()
         else:
             raise OSError("File exists: " + dest)

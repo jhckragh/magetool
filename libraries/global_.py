@@ -35,9 +35,8 @@ Mage.)
 
 import os
 from commands.module import Module
-from libraries.core import get_config, put_config
+from libraries.core import get_config, put_config, fill_tmplt
 from lxml import etree
-from string import Template
 
 class Global:
     def __init__(self, superclass=None, override=False):
@@ -62,8 +61,9 @@ class Global:
 
         """
         self.module = Module().identify()
-        self._get_type()
-        self._get_template()
+        self.type = self._get_type()
+        self.type_name = self.type.capitalize()
+        self.tmplt = self._get_tmplt()
 
     def _get_type(self):
         """Get the name of the global class's type.
@@ -72,14 +72,13 @@ class Global:
         classes: block, helper, and model.
 
         """
-        self.type = self.__class__.__name__.lower()
-        self.type_name = self.type.capitalize()
+        return self.__class__.__name__.lower()
 
-    def _get_template(self):
+    def _get_tmplt(self):
         """Import the template file for the global class."""
-        template_import = "from templates.%(type)s import %(type)s as template"
-        exec template_import % {"type": self.type}
-        self.template = template
+        tmplt_import = "from templates.%(type)s import %(type)s as tmplt"
+        exec tmplt_import % {"type": self.type}
+        return tmplt
 
     def create(self, name):
         """Create the global class.
@@ -102,17 +101,13 @@ class Global:
 
     def _create_class(self):
         """Create an empty global class."""
-        template = Template(self.template)
-        template = template.substitute(namespace=self.module["namespace"],
-                                       module_name=self.module["name"],
-                                       name=self.name,
-                                       superclass=self.superclass)
+        tmplt = fill_tmplt(self.tmplt, self.module, self.name, self.superclass)
         name = self.name
         path = self.type_name + os.sep
         # Check if the class name contains underscores. If it does, interpret
         # them as directory separators.
-        if not self.name.find("_") == -1:
-            substrings = self.name.split("_")
+        if not name.find("_") == -1:
+            substrings = name.split("_")
             path += os.path.join(*substrings[:-1]) + os.sep
             try:
                 os.makedirs(path)
@@ -122,7 +117,7 @@ class Global:
         dest = path + name + ".php"
         if not os.path.isfile(dest):
             dest = open(dest, "w")
-            dest.write(template)
+            dest.write(tmplt)
             dest.close()
         else:
             raise OSError("File exists: " + dest)

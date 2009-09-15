@@ -26,6 +26,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 from lxml import etree
+from string import Template
 
 def get_config():
     """Read and parse a module configuration file, returning the root element
@@ -46,3 +47,24 @@ def put_config(element):
     dest = open("etc/config.xml", "w")
     dest.write(etree.tostring(element, pretty_print=True))
     dest.close()
+
+def fill_tmplt(tmplt, module, name, superclass):
+    """Fill out the template file for the global class.
+
+    Args:
+        template: A Template string.
+        module: A dictionary containing the keys "namespace" and "name".
+        name: The name of the global class, e.g., "Product".
+        superclass: The full name of the superclass, e.g.,
+                    "Mage_Core_Block_Template".
+
+    Return:
+        A string.
+
+    """
+    tmplt = Template(tmplt)
+    tmplt = tmplt.substitute(namespace=module["namespace"],
+                             module_name=module["name"],
+                             name=name,
+                             superclass=superclass)
+    return tmplt
