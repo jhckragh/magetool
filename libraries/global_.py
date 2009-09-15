@@ -119,9 +119,13 @@ class Global:
             except OSError:
                 pass # The directories already exist
             name = substrings[-1]
-        dest = open(path + name + ".php", "w")
-        dest.write(template)
-        dest.close()
+        dest = path + name + ".php"
+        if not os.path.isfile(dest):
+            dest = open(dest, "w")
+            dest.write(template)
+            dest.close()
+        else:
+            raise OSError("File exists: " + dest)
 
     def register(self):
         """Tell Mage that the module has one or more self.type global classes.

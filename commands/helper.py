@@ -30,11 +30,7 @@ from libraries.global_ import Global
 class Helper(Global):
     def help(self):
         """Print a help message describing this command."""
-        print """Usage: magetool create helper NAME
-
-Description:
-  Define a PHP class in Helper/NAME.php and register the presence of helper
-  classes in the module's configuration file if this has not already been done.
+        print """Usage: magetool [OPTION]... [create|register] helper [NAME]
 
 Options:
   -s, --superclass=SUPERCLASS  Make the helper extend SUPERCLASS.
@@ -56,4 +52,8 @@ Examples:
 
   magetool -os Mage_Checkout_Helper_Data create helper Data
         Define a PHP class in Helper/Data.php which extends and overrides
-        Mage_Checkout_Helper_Data."""
+        Mage_Checkout_Helper_Data.
+
+  magetool register helper
+        Update the module's configuration file to tell Mage that the module
+        has one or more helper classes."""

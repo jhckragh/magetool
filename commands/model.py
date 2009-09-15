@@ -30,11 +30,7 @@ from libraries.global_ import Global
 class Model(Global):
     def help(self):
         """Print a help message describing this command."""
-        print """Usage: magetool create model NAME
-
-Description:
-  Define a PHP class in Model/NAME.php and register the presence of model
-  classes in the module's configuration file if this has not already been done.
+        print """Usage: magetool [OPTION]... [create|register] model [NAME]
 
 Options:
   -s, --superclass=SUPERCLASS  Make the model extend SUPERCLASS.
@@ -56,4 +52,8 @@ Examples:
 
   magetool -os Mage_Customer_Model_Customer create model Customer
         Define a PHP class in Model/Customer.php which extends and overrides
-        Mage_Customer_Model_Customer."""
+        Mage_Customer_Model_Customer.
+
+  magetool register model
+        Update the module's configuration file to tell Mage that the module
+        has one or more model classes."""

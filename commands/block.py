@@ -30,11 +30,7 @@ from libraries.global_ import Global
 class Block(Global):
     def help(self):
         """Print a help message describing this command."""
-        print """Usage: magetool create block NAME
-
-Description:
-  Define a PHP class in Block/NAME.php and register the presence of block
-  classes in the module's configuration file if this has not already been done.
+        print """Usage: magetool [OPTION]... [create|register] block [NAME]
 
 Options:
   -s, --superclass=SUPERCLASS  Make the block extend SUPERCLASS.
@@ -57,4 +53,7 @@ Examples:
   magetool -os Mage_Catalog_Block_Product_View_Type_Simple create block Simple
         Define a PHP class in Block/Simple.php which extends and overrides
         Mage_Catalog_Block_Product_View_Type_Simple.
-"""
+
+  magetool register block
+        Update the module's configuration file to tell Mage that the module
+        has one or more block classes."""
