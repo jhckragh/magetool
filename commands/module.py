@@ -52,7 +52,7 @@ class Module:
             self.code_pool = parent
             self.namespace = cwd
         else:
-            raise Exception("Wrong execution directory.")
+            raise EnvironmentError("Wrong execution directory.")
 
     def identify(self):
         """Return information about the module which other classes can use."""
