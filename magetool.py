@@ -67,10 +67,18 @@ See 'magetool help COMMAND' for more information on a specific command."""
     module_import = "from commands.%s import %s as cls" % (module, cls)
     try:
         exec module_import
-        obj = cls(**kwargs)
     except ImportError:
         parser.error("command %s not implemented" % module)
-    getattr(obj, method)(*args[2:])
+
+    if method == "help":
+        getattr(cls, "help")()
+        return
+
+    obj = cls(**kwargs)
+    try:
+        getattr(obj, method)(*args[2:])
+    except AttributeError:
+        parser.error("action %s not implemented" % module)
 
 if __name__ == "__main__":
     main()

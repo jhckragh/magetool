@@ -107,7 +107,8 @@ class Controller:
 
         put_config(config)
 
-    def help(self):
+    @staticmethod
+    def help():
         """Print a help message describing this command."""
         print """Usage: magetool create controller NAME
 
