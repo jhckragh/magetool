@@ -33,9 +33,8 @@ Mage.)
 
 """
 
-import os
 from commands.module import Module
-from libraries.core import get_config, put_config, fill_tmplt
+from libraries.core import get_config, put_config, create_class_file
 from lxml import etree
 
 class Global:
@@ -96,31 +95,10 @@ class Global:
             superclass = "Mage_Core_%s_%s"
             end = "Template" if self.type == "block" else "Abstract"
             self.superclass = superclass % (self.type_name, end)
-        self._create_class()
-        self.register()
 
-    def _create_class(self):
-        """Create an empty global class."""
-        tmplt = fill_tmplt(self.tmplt, self.module, self.name, self.superclass)
-        name = self.name
-        path = self.type_name + os.sep
-        # Check if the class name contains underscores. If it does, interpret
-        # them as directory separators.
-        if not name.find("_") == -1:
-            substrings = name.split("_")
-            path += os.path.join(*substrings[:-1]) + os.sep
-            try:
-                os.makedirs(path)
-            except OSError:
-                pass # The directories already exist
-            name = substrings[-1]
-        dest = path + name + ".php"
-        if not os.path.isfile(dest):
-            dest = open(dest, "w")
-            dest.write(tmplt)
-            dest.close()
-        else:
-            raise OSError("File exists: " + dest)
+        create_class_file(self.type_name, self.tmplt, self.module, self.name,
+                          self.superclass)
+        self.register()
 
     def register(self):
         """Tell Mage that the module has one or more self.type global classes.

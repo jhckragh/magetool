@@ -25,9 +25,8 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-import os
 from commands.module import Module
-from libraries.core import get_config, put_config, fill_tmplt
+from libraries.core import get_config, put_config, create_class_file
 from lxml import etree
 from templates.controller import controller
 
@@ -74,31 +73,9 @@ class Controller:
         self.name = "_".join(substrings)
         self.front_name = self.module["name"].lower()
 
-        self._create_class()
+        create_class_file("controller", controller, self.module, self.name,
+                          self.superclass)
         self._update_config()
-
-    def _create_class(self):
-        """Create an empty controller class."""
-        tmplt = fill_tmplt(controller, self.module, self.name, self.superclass)
-        name = self.name
-        path = "controllers" + os.sep
-        # Check if the class name contains underscores. If it does, interpret
-        # them as directory separators.
-        if not self.name.find("_") == -1:
-            substrings = self.name.split("_")
-            path += os.path.join(*substrings[:-1]) + os.sep
-            try:
-                os.makedirs(path)
-            except OSError:
-                pass # The directories already exist
-            name = substrings[-1]
-        dest = path + name + ".php"
-        if not os.path.isfile(dest):
-            dest = open(dest, "w")
-            dest.write(tmplt)
-            dest.close()
-        else:
-            raise OSError("File exists: " + dest)
 
     def _update_config(self):
         """Make Mage aware that this module has controllers to dispatch to.

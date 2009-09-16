@@ -25,6 +25,7 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+import os
 from lxml import etree
 from string import Template
 
@@ -68,3 +69,34 @@ def fill_tmplt(tmplt, module, name, superclass):
                              name=name,
                              superclass=superclass)
     return tmplt
+
+def create_class_file(type_, tmplt, module, name, superclass):
+    """Create an empty controller class.
+
+    Args:
+        type_: The type of the PHP class to be created, i.e., one
+               of "controller", "block", "model", or "helper".
+        tmplt, module, name, and superclass: See fill_template().
+
+    """
+    tmplt = fill_tmplt(tmplt, module, name, superclass)
+    type_ = "controllers" if type_ == "controller" else type_.capitalize()
+    path = type_ + os.sep
+    # Check if the class name contains underscores. If it does, interpret
+    # them as directory separators.
+    if not name.find("_") == -1:
+        substrings = name.split("_")
+        path += os.path.join(*substrings[:-1]) + os.sep
+        try:
+            os.makedirs(path)
+        except OSError:
+            pass # The directories already exist
+        name = substrings[-1]
+    dest = path + name + ".php"
+    if not os.path.isfile(dest):
+        dest = open(dest, "w")
+        dest.write(tmplt)
+        dest.close()
+    else:
+        raise OSError("File exists: " + dest)
+
