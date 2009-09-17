@@ -37,9 +37,9 @@ Options:
   -s, --superclass=SUPERCLASS  Make the helper extend SUPERCLASS.
                                Default: Mage_Core_Helper_Abstract.
 
-  -o, --override               If --superclass=SUPERCLASS is used,
-                               tell Mage that the helper overrides
-                               SUPERCLASS.
+  -o, --override               Tell Mage that the helper overrides
+                               its superclass (use in conjunction
+                               with --superclass=SUPERCLASS.)
 
 Examples:
   magetool create helper Data

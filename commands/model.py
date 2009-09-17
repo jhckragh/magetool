@@ -35,14 +35,14 @@ class Model(Global):
 
 Options:
   -s, --superclass=SUPERCLASS  Make the model extend SUPERCLASS.
-                               Default: Mage_Core_Helper_Abstract.
+                               Default: Mage_Core_Model_Abstract.
 
-  -o, --override               If --superclass=SUPERCLASS is used,
-                               tell Mage that the model overrides
-                               SUPERCLASS.
+  -o, --override               Tell Mage that the model overrides
+                               its superclass (use in conjunction
+                               with --superclass=SUPERCLASS.)
 
 Examples:
-  magetool create helper Data
+  magetool create model Data
         Define a PHP class in Model/Data.php and update the module's
         configuration accordingly.
 

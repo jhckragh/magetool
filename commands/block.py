@@ -37,9 +37,9 @@ Options:
   -s, --superclass=SUPERCLASS  Make the block extend SUPERCLASS.
                                Default: Mage_Core_Block_Template.
 
-  -o, --override               If --superclass=SUPERCLASS is used,
-                               tell Mage that the block overrides
-                               SUPERCLASS.
+  -o, --override               Tell Mage that the block overrides
+                               its superclass (use in conjunction
+                               with --superclass=SUPERCLASS.)
 
 Examples:
   magetool create block Product
