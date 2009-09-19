@@ -49,20 +49,20 @@ class GlobalClass:
                       superclass.
 
         """
-        self.superclass = superclass
         self.reg = True
-        self.override = override
-        self._configure()
+        self._configure(superclass, override)
 
-    def _configure(self):
+    def _configure(self, superclass, override):
         """Configure the global class and retrieve information about the
         module to which it belongs.
 
         """
-        self.module = Module().identify()
+        self.superclass = superclass
+        self.override = override
         self.type = self._get_type()
         self.type_name = self.type.capitalize()
         self.tmplt = self._get_tmplt()
+        self.module = Module().identify()
 
     def _get_type(self):
         """Get the name of the global class's type.
