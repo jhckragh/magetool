@@ -50,12 +50,12 @@ def put_config(element):
     dest.close()
 
 def fill_tmplt(tmplt, module, name, superclass):
-    """Fill out the template file for the global class.
+    """Fill out the template file for a class.
 
     Args:
         template: A Template string.
         module: A dictionary containing the keys "namespace" and "name".
-        name: The name of the global class, e.g., "Product".
+        name: The name of the class, e.g., "Product".
         superclass: The full name of the superclass, e.g.,
                     "Mage_Core_Block_Template".
 
@@ -71,7 +71,7 @@ def fill_tmplt(tmplt, module, name, superclass):
     return tmplt
 
 def create_class_file(type_, tmplt, module, name, superclass):
-    """Create an empty controller class.
+    """Create a skeleton PHP class.
 
     Args:
         type_: The type of the PHP class to be created, i.e., one

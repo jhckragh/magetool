@@ -96,7 +96,7 @@ class GlobalClass:
             end = "Template" if self.type == "block" else "Abstract"
             self.superclass = superclass % (self.type_name, end)
 
-        create_class_file(self.type_name, self.tmplt, self.module, self.name,
+        create_class_file(self.type, self.tmplt, self.module, self.name,
                           self.superclass)
         self.register()
 
