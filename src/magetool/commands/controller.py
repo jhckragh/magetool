@@ -25,10 +25,10 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from commands.module import Module
-from libraries.core import get_config, put_config, create_class_file
 from lxml import etree
-from templates.controller import controller
+from magetool.commands.module import Module
+from magetool.libraries.core import get_config, put_config, create_class_file
+from magetool.templates.controller import controller
 
 class Controller:
     def __init__(self, superclass=None, router=None):

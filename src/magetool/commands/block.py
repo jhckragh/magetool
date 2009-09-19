@@ -25,36 +25,36 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from libraries.globalclass import GlobalClass
+from magetool.libraries.globalclass import GlobalClass
 
-class Helper(GlobalClass):
+class Block(GlobalClass):
     @staticmethod
     def help():
         """Print a help message describing this command."""
-        print """Usage: magetool [OPTION]... [create|register] helper [NAME]
+        print """Usage: magetool [OPTION]... [create|register] block [NAME]
 
 Options:
-  -s, --superclass=SUPERCLASS  Make the helper extend SUPERCLASS.
-                               Default: Mage_Core_Helper_Abstract.
+  -s, --superclass=SUPERCLASS  Make the block extend SUPERCLASS.
+                               Default: Mage_Core_Block_Template.
 
-  -o, --override               Tell Mage that the helper overrides
+  -o, --override               Tell Mage that the block overrides
                                its superclass (use in conjunction
                                with --superclass=SUPERCLASS.)
 
 Examples:
-  magetool create helper Data
-        Define a PHP class in Helper/Data.php and update the module's
+  magetool create block Product
+        Define a PHP class in Block/Product.php and update the module's
         configuration accordingly.
 
-  magetool -s Mage_Checkout_Helper_Data create helper Data
-        Define a PHP class in Helper/Data.php which extends the class
-        Mage_Checkout_Helper_Data and update the module's configuration
-        file accordingly.
+  magetool -s Mage_Catalog_Block_Product_View_Type_Simple create block Simple
+        Define a PHP class in Block/Simple.php which extends the class
+        Mage_Catalog_Block_Product_View_Type_Simple and update the module's
+        configuration file accordingly.
 
-  magetool -os Mage_Checkout_Helper_Data create helper Data
-        Define a PHP class in Helper/Data.php which extends and overrides
-        Mage_Checkout_Helper_Data.
+  magetool -os Mage_Catalog_Block_Product_View_Type_Simple create block Simple
+        Define a PHP class in Block/Simple.php which extends and overrides
+        Mage_Catalog_Block_Product_View_Type_Simple.
 
-  magetool register helper
+  magetool register block
         Update the module's configuration file to tell Mage that the module
-        has one or more helper classes."""
+        has one or more block classes."""

@@ -33,9 +33,9 @@ Mage.)
 
 """
 
-from commands.module import Module
-from libraries.core import get_config, put_config, create_class_file
 from lxml import etree
+from magetool.commands.module import Module
+from magetool.libraries.core import get_config, put_config, create_class_file
 
 class GlobalClass:
     def __init__(self, superclass=None, override=False):
@@ -75,8 +75,8 @@ class GlobalClass:
 
     def _get_tmplt(self):
         """Import the template file for the global class."""
-        tmplt_import = "from templates.%(type)s import %(type)s as tmplt"
-        exec tmplt_import % {"type": self.type}
+        import_ = "from magetool.templates.%(type)s import %(type)s as tmplt"
+        exec import_ % {"type": self.type}
         return tmplt
 
     def create(self, name):

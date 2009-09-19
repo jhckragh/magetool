@@ -64,7 +64,7 @@ See 'magetool help COMMAND' for more information on a specific command."""
 
     method, module = [arg.lower() for arg in args[:2]]
     cls = module.capitalize()
-    module_import = "from commands.%s import %s as cls" % (module, cls)
+    module_import = "from magetool.commands.%s import %s as cls" % (module, cls)
     try:
         exec module_import
     except ImportError:

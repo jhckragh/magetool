@@ -26,10 +26,10 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 import os
-import settings
+import magetool.settings as settings
+from magetool.templates.config_xml import config_xml
+from magetool.templates.regfile import regfile
 from string import Template
-from templates.config_xml import config_xml
-from templates.regfile import regfile
 from xml.dom.minidom import parseString
 
 class Module:
