@@ -25,9 +25,9 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from libraries.global_ import Global
+from libraries.globalclass import GlobalClass
 
-class Helper(Global):
+class Helper(GlobalClass):
     @staticmethod
     def help():
         """Print a help message describing this command."""

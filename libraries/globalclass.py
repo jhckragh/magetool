@@ -37,7 +37,7 @@ from commands.module import Module
 from libraries.core import get_config, put_config, create_class_file
 from lxml import etree
 
-class Global:
+class GlobalClass:
     def __init__(self, superclass=None, override=False):
         """Initialize the global class by storing run-time
         arguments and calling the configure method.
