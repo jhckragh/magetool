@@ -29,11 +29,14 @@ Then, as root, run
 
 ### Prerequisites ###
 
-Magetool has been tested on Python 2.6. To use Magetool you must have
-lxml[3] installed. On Ubuntu Linux you can install lxml through apt
-like so:
+To run Magetool you need to have the following software installed:
 
-    sudo apt-get install python-lxml
+ * Python 2.6
+ * lxml
+
+On Ubuntu Linux you can install these dependencies through apt:
+
+    sudo apt-get install python2.6 python-lxml
 
 
 ## Example usage ##
