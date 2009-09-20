@@ -55,19 +55,31 @@ Here's a sample Magetool workflow:
 Please send feedback and bug reports to jhckragh [at] gmail [dot] com.
 
 
+## Known bugs ##
+
+* Overriding abstract classes is unsupported. (For details on how to
+  override an abstract class manually, see the community forum[4].)
+* There's no option for specifying a custom frontName when creating
+  controllers. Technically the frontName doesn't have to match the
+  module name, but currently Magetool enforces this convention.
+* Creating multiple routers for a single module or editing existing
+  routers is unsupported.
+
+
 ## Links ##
 
 [1] <http://www.example.com/>
 [2] <http://www.magentocommerce.com/>
 [3] <http://codespeak.net/lxml/index.html#download>
+[4] <http://www.magentocommerce.com/boards/viewthread/18494/#t151509>
 
 
 ## Legal ##
 
-Python is a trademark or registered trademark of the Python Software
-Foundation. Linux is a registered trademark of Linus Torvalds. Ubuntu
-is a registered trademark of Canonical Ltd. Magento is a trademark of
-Irubin Consulting Inc.
+Magento is a trademark of Irubin Consulting Inc. Python is a trademark
+or registered trademark of the Python Software Foundation. Linux is a
+registered trademark of Linus Torvalds. Ubuntu is a registered
+trademark of Canonical Ltd.
 
 Magetool is not in any way affiliated with or endorsed by any of these
 trademark owners.
