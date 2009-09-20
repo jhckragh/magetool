@@ -1,0 +1,157 @@
+Magetool documentation
+======================
+
+Creating a module
+-----------------
+
+To create a new module called NewProduct, navigate to a namespace
+directory and run magetool create module NewProduct:
+
+    cd ~/public_html/magento/app/code/local/Company
+    magetool create module NewProduct
+
+This will create the following directory structure within the
+namespace directory:
+
+    - NewProduct/
+       |- Block/
+       |- controllers/
+       |- etc/
+       | '- config.xml
+       |- Helper/
+       |- Model/
+       |- sql/
+
+In addition it will activate the module by creating an activation file
+in ../../../etc/modules/. (In this case the file will be called
+Company_NewProduct.xml).
+
+
+Creating a controller
+---------------------
+
+To create an IndexController in a module, navigate to the module's
+directory and run magetool create controller index:
+
+    cd ~/public_html/magento/app/code/local/Company/NewProduct
+    magetool create controller index
+
+This will do two things:
+
+1. It will define a skeleton PHP class in controllers/IndexController.php:
+
+        <?php
+        class class Company_NewProduct_IndexController
+            extends Mage_Core_Controller_Front_Action
+        {
+        
+        }
+
+2. It will update the module's configuration file, etc/config.xml,
+   to tell Magento that the module now has one or more controllers to
+   dispatch to:
+
+        ...
+        <frontend>
+          ...
+          <routers>
+            <newproduct>
+	      <use>standard</use>
+                <args>
+	          <module>Company_NewProduct</module>
+                  <frontName>newproduct</frontName>
+	        </args>
+            </newproduct>
+          </routers>
+          ...
+        </frontend>
+        ...
+
+
+Creating blocks, helpers, and models
+------------------------------------
+
+To create a block called ProductViewCase in a module, navigate to the
+module's directory and invoke Magetool like so:
+
+    cd ~/public_html/magento/app/code/local/Company/NewProduct
+    magetool create block ProductViewCase
+
+(To create a helper or a model with the same name, replace block with
+either helper or model, respectively.)
+      
+This will not only define a skeleton PHP class in
+Block/ProductViewCase.php; it will also update the module's
+configuration file to tell Magento that the module has one or more Block
+classes:
+
+    ...
+    <global>
+      ...
+        <blocks>
+	  <newproduct>
+	    <class>Company_NewProduct_Block</class>
+	  </newproduct>
+	</blocks>
+        ...
+    </global>
+    ...
+    
+
+Registering blocks, helpers, or models
+--------------------------------------
+
+Sometimes you might be working on a module where blocks, helpers, or
+models have been defined manually but where the module's configuration
+file has not been updated accordingly. To register the presence of
+these kinds of classes in the configuration file, use the register
+action, e.g.:
+
+    cd ~/public_html/magento/app/code/local/Company/NewProduct
+    magetool register block
+
+This will update the configuration file the same way magetool create
+block does.
+
+
+Specifying a superclass
+-----------------------
+
+Normally when you use the create action, Magetool defines the created
+PHP class so that it extends a generic superclass. Running
+
+    magetool create helper Data
+
+for instance, defines a PHP class in Helper/Data.php which extends
+Mage_Core_Helper_Abstract.
+
+To manually specify which superclass a PHP class should extend, use
+the -s or --superclass option:
+
+    cd ~/public_html/magento/app/code/local/Company/NewProduct
+    magetool -s Mage_Catalog_Helper_Image create helper Data
+
+This will define a PHP class in Helper/Data.php which extends
+Mage_Catalog_Helper_Image.
+
+
+Overriding a class
+------------------
+
+To tell Magento that a created class should override its superclass, use
+the -o or --override option.
+
+To illustrate, the following invocation will define a block in
+Block/Over.php which extends and overrides the class
+Mage_Catalog_Block_Product_View_Type_Simple:
+
+      
+    cd ~/public_html/magento/app/code/local/Company/NewProduct
+    magetool -os Mage_Catalog_Block_Product_View_Type_Simple create block Over
+
+
+Legal
+-----
+
+Magento is a trademark of Irubin Consulting Inc. Magetool is not in
+any way affiliated with or endorsed by this trademark owner.
