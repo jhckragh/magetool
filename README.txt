@@ -71,7 +71,7 @@ Please send feedback and bug reports to jhckragh [at] gmail [dot] com.
 
 ## Links ##
 
-[1] <http://www.example.com/>
+[1] <http://jhckragh.github.com/magetool/>
 [2] <http://www.magentocommerce.com/>
 [3] <http://codespeak.net/lxml/index.html#download>
 [4] <http://www.magentocommerce.com/boards/viewthread/18494/#t151509>
