@@ -2,7 +2,7 @@
 
 from distutils.core import setup
 
-setup(name="Magetool",
+setup(name="magetool",
       version="0.1.0",
       description="CLI tool to automate repetitive tasks in Mage development.",
       author="Jacob Kragh",
