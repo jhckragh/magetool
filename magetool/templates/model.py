@@ -1,4 +1,4 @@
-model = """<?php
+string = """<?php
 
 class ${namespace}_${module_name}_Model_${name} extends ${superclass}
 {

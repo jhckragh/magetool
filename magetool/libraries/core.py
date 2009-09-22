@@ -25,9 +25,7 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-import os
 from lxml import etree
-from string import Template
 
 def get_config():
     """Read and parse a module configuration file, returning the root element
@@ -48,55 +46,3 @@ def put_config(element):
     dest = open("etc/config.xml", "w")
     dest.write(etree.tostring(element, pretty_print=True))
     dest.close()
-
-def fill_tmplt(tmplt, module, name, superclass):
-    """Fill out the template file for a class.
-
-    Args:
-        template: A Template string.
-        module: A dictionary containing the keys "namespace" and "name".
-        name: The name of the class, e.g., "Product".
-        superclass: The full name of the superclass, e.g.,
-                    "Mage_Core_Block_Template".
-
-    Return:
-        A string.
-
-    """
-    tmplt = Template(tmplt)
-    tmplt = tmplt.substitute(namespace=module["namespace"],
-                             module_name=module["name"],
-                             name=name,
-                             superclass=superclass)
-    return tmplt
-
-def create_class_file(type_, tmplt, module, name, superclass):
-    """Create a skeleton PHP class.
-
-    Args:
-        type_: The type of the PHP class to be created, i.e., one
-               of "controller", "block", "model", or "helper".
-        tmplt, module, name, and superclass: See fill_template().
-
-    """
-    tmplt = fill_tmplt(tmplt, module, name, superclass)
-    type_ = "controllers" if type_ == "controller" else type_.capitalize()
-    path = type_ + os.sep
-    # Check if the class name contains underscores. If it does, interpret
-    # them as directory separators.
-    if not name.find("_") == -1:
-        substrings = name.split("_")
-        path += os.path.join(*substrings[:-1]) + os.sep
-        try:
-            os.makedirs(path)
-        except OSError:
-            pass # The directories already exist
-        name = substrings[-1]
-    dest = path + name + ".php"
-    if not os.path.isfile(dest):
-        dest = open(dest, "w")
-        dest.write(tmplt)
-        dest.close()
-    else:
-        raise OSError("File exists: " + dest)
-

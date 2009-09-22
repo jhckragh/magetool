@@ -27,14 +27,13 @@
 
 from lxml import etree
 from magetool.commands.module import Module
-from magetool.libraries.core import get_config, put_config, create_class_file
-from magetool.templates.controller import controller
+from magetool.libraries.cls import Class
+from magetool.libraries.core import get_config, put_config
 
-class Controller:
+class Controller(Class):
     def __init__(self, superclass=None, router=None):
-        """Initialize the controller by storing information about the
-        module to which it belongs and by passing along run-time
-        arguments to the configure method.
+        """Initialize the controller, e.g., by storing run-time arguments to
+        the configure method.
 
         Args:
             superclass: Full name of the controller's superclass,
@@ -44,14 +43,11 @@ class Controller:
                     "default".
 
         """
-        self.module = Module().identify()
-        self._configure(superclass, router)
-
-    def _configure(self, superclass, router):
-        """Store the controller's superclass and router."""
+        Class.__init__(self)
         default = "Mage_Core_Controller_Front_Action"
         self.superclass = superclass if superclass else default
         self.router = router if router else "standard"
+        self.front_name = self.module["name"].lower()
 
     def create(self, name):
         """Create the controller.
@@ -71,13 +67,11 @@ class Controller:
         substrings = name.split("_")
         substrings[-1] = substrings[-1].capitalize() + "Controller"
         self.name = "_".join(substrings)
-        self.front_name = self.module["name"].lower()
 
-        create_class_file("controller", controller, self.module, self.name,
-                          self.superclass)
-        self._update_config()
+        self._create_class(self.name, self.superclass)
+        self.register()
 
-    def _update_config(self):
+    def register(self):
         """Make Mage aware that this module has controllers to dispatch to.
         
         Update the module's configuration file to configure a route,

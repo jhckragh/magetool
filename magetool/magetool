@@ -32,7 +32,7 @@
 __author__ = "jhckragh@gmail.com (Jacob Kragh)"
 __version__ = "0.1.1"
 
-from optparse import OptionParser, SUPPRESS_HELP
+from optparse import OptionParser
 
 def main():
     usage = """Usage: magetool [OPTION]... ACTION COMMAND ARG
@@ -74,10 +74,10 @@ See 'magetool help COMMAND' for more information on a specific command."""
         return
 
     obj = cls(**kwargs)
-    try:
-        getattr(obj, method)(*args[2:])
-    except AttributeError:
-        parser.error("action %s not implemented" % module)
+    # try:
+    getattr(obj, method)(*args[2:])
+    # except AttributeError:
+    #     parser.error("action %s not implemented" % module)
 
 if __name__ == "__main__":
     main()

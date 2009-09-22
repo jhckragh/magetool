@@ -25,22 +25,21 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-"""Superclass for 'global classes'.
-
-(Global classes are classes whose presence must be registered within
-the <global> element of a module's configuration file to be loaded by
-Mage.)
-
-"""
-
 from lxml import etree
 from magetool.commands.module import Module
-from magetool.libraries.core import get_config, put_config, create_class_file
+from magetool.libraries.cls import Class
+from magetool.libraries.core import get_config, put_config
 
-class GlobalClass:
+class GlobalClass(Class):
+    """Superclass for 'global classes'.
+
+    (Global classes are classes whose presence must be registered within
+    the <global> element of a module's configuration file to be loaded by
+    Mage.)
+
+    """
     def __init__(self, superclass=None, override=False):
-        """Initialize the global class by storing run-time
-        arguments and calling the configure method.
+        """Initialize the global class by storing run-time arguments.
 
         Args:
             superclass: Full name of the global class's superclass,
@@ -49,35 +48,9 @@ class GlobalClass:
                       superclass.
 
         """
-        self.reg = True
-        self._configure(superclass, override)
-
-    def _configure(self, superclass, override):
-        """Configure the global class and retrieve information about the
-        module to which it belongs.
-
-        """
+        Class.__init__(self)
         self.superclass = superclass
         self.override = override
-        self.type = self._get_type()
-        self.type_name = self.type.capitalize()
-        self.tmplt = self._get_tmplt()
-        self.module = Module().identify()
-
-    def _get_type(self):
-        """Get the name of the global class's type.
-
-        At the time of writing there are three types of global
-        classes: block, helper, and model.
-
-        """
-        return self.__class__.__name__.lower()
-
-    def _get_tmplt(self):
-        """Import the template file for the global class."""
-        import_ = "from magetool.templates.%(type)s import %(type)s as tmplt"
-        exec import_ % {"type": self.type}
-        return tmplt
 
     def create(self, name):
         """Create the global class.
@@ -94,10 +67,9 @@ class GlobalClass:
         if self.superclass is None:
             superclass = "Mage_Core_%s_%s"
             end = "Template" if self.type == "block" else "Abstract"
-            self.superclass = superclass % (self.type_name, end)
+            self.superclass = superclass % (self.type.capitalize(), end)
 
-        create_class_file(self.type, self.tmplt, self.module, self.name,
-                          self.superclass)
+        self._create_class(name, self.superclass)
         self.register()
 
     def register(self):
@@ -133,7 +105,8 @@ class GlobalClass:
             module = etree.SubElement(type_, module)
             class_ = etree.SubElement(module, "class")
             class_.text = "%s_%s_%s" % (self.module["namespace"],
-                                        self.module["name"], self.type_name)
+                                        self.module["name"],
+                                        self.type.capitalize())
         if self.override:
             self._add_rewrite(type_)
         put_config(config)
@@ -156,6 +129,5 @@ class GlobalClass:
         sc_name = etree.SubElement(rewrite, sc_name)
         sc_name.text = "%s_%s_%s_%s" % (self.module["namespace"],
                                         self.module["name"],
-                                        self.type_name,
+                                        self.type.capitalize(),
                                         self.name)
-
