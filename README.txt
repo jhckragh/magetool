@@ -7,8 +7,10 @@ Often when you're developing a custom module you find yourself
 performing certain tasks over and over again, e.g.,
 
  * Creating a directory structure for the module and activating it
+
  * Typing out long class names when creating a new controller, block,
    model, or helper
+
  * Editing the module's configuration file the first time you create a
    controller, block, model, or helper
 
@@ -48,8 +50,9 @@ Here's a sample Magetool workflow:
     cd HelloWorld
     magetool create controller index                  (2)
 
-1. This creates and activates a new module called HelloWorld.
-2. This defines a skeleton PHP class in controllers/IndexController.php
+ 1. This creates and activates a new module called HelloWorld.
+
+ 2. This defines a skeleton PHP class in controllers/IndexController.php
    and updates the module's configuration file accordingly.
 
 
@@ -60,13 +63,15 @@ Please send feedback and bug reports to jhckragh [at] gmail [dot] com.
 
 ## Known bugs ##
 
-* Overriding abstract classes is unsupported. (For details on how to
-  override an abstract class manually, see the community forum[4].)
-* There's no option for specifying a custom frontName when creating
-  controllers. Technically the frontName doesn't have to match the
-  module name, but currently Magetool enforces this convention.
-* Creating multiple routers for a single module or editing existing
-  routers is unsupported.
+ * Overriding abstract classes is unsupported. (For details on how to
+   override an abstract class manually, see the community forum[4].)
+
+ * There's no option for specifying a custom frontName when creating
+   controllers. Technically the frontName doesn't have to match the
+   module name, but currently Magetool enforces this convention.
+
+ * Creating multiple routers for a single module or editing existing
+   routers is unsupported.
 
 
 ## Links ##
