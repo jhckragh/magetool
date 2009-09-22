@@ -33,8 +33,8 @@ class Class(object):
         class's template file is named after the class's type.)
 
         """
-        template = __import__("magetool.templates.%s" % (self.type,),
-                              fromlist=["magetool.templates"])
+        template = __import__("magetool.templates." + self.type,
+                              globals(), locals(), ["magetool.templates"])
         return template.string
 
     def _fill_template(self, name, superclass):
