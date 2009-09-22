@@ -26,7 +26,6 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 from lxml import etree
-from magetool.commands.module import Module
 from magetool.libraries.cls import Class
 from magetool.libraries.core import get_config, put_config
 
