@@ -30,7 +30,7 @@
 """A CLI utility to automate repetitive tasks in Mage development."""
 
 __author__ = "jhckragh@gmail.com (Jacob Kragh)"
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 from optparse import OptionParser
 
