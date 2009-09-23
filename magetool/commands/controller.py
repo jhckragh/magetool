@@ -122,7 +122,7 @@ Examples:
   magetool create controller index
         Create a file called IndexController.php in controllers/ and configure
         a route in etc/config.xml so Mage can dispatch requests to the module's
-        controller(s). (See http://alanstorm.com/magento_controller_hello_world)
+        controller(s).
 
   magetool -s Mage_Adminhtml_Controller_Action create controller OrderController
         Define a PHP class in controllers/OrderController.php which extends
@@ -135,4 +135,8 @@ Examples:
   magetool -r admin -s Mage_Adminhtml_IndexController create controller order
         Define a PHP class in controllers/OrderController.php which extends
         the class Mage_Adminhtml_IndexController and configure a route in
-        etc/config.xml using the "admin" router."""
+        etc/config.xml using the "admin" router.
+
+  magetool register controller
+        Configure a route in etc/config.xml so Mage can dispatch
+        requests to the module's controller(s)."""

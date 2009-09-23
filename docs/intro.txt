@@ -5,9 +5,9 @@ Creating a module
 -----------------
 
 To create a new module called NewProduct, navigate to a namespace
-directory and run magetool create module NewProduct:
+directory (e.g., ~/public_html/magento/app/code/local/Company/)
+and run Magetool like this:
 
-    cd ~/public_html/magento/app/code/local/Company
     magetool create module NewProduct
 
 This will create the following directory structure within the
@@ -17,23 +17,23 @@ namespace directory:
        |- Block/
        |- controllers/
        |- etc/
-       | '- config.xml
+       |   '- config.xml
        |- Helper/
        |- Model/
        |- sql/
 
 In addition it will activate the module by creating an activation file
-in ../../../etc/modules/. (In this case the file will be called
-Company_NewProduct.xml).
+in ../../../etc/modules/. (In the example case the file will be
+called Company_NewProduct.xml.)
 
 
 Creating a controller
 ---------------------
 
 To create an IndexController in a module, navigate to the module's
-directory and run magetool create controller index:
+directory (e.g., ~/public_html/magento/app/code/local/Company/NewProduct/)
+and run Magetool like this:
 
-    cd ~/public_html/magento/app/code/local/Company/NewProduct
     magetool create controller index
 
 This will do two things:
@@ -56,11 +56,11 @@ This will do two things:
           ...
           <routers>
             <newproduct>
-	      <use>standard</use>
+              <use>standard</use>
                 <args>
-	          <module>Company_NewProduct</module>
+                  <module>Company_NewProduct</module>
                   <frontName>newproduct</frontName>
-	        </args>
+                </args>
             </newproduct>
           </routers>
           ...
@@ -72,9 +72,8 @@ Creating blocks, helpers, and models
 ------------------------------------
 
 To create a block called ProductViewCase in a module, navigate to the
-module's directory and invoke Magetool like so:
+module's directory and run Magetool like this:
 
-    cd ~/public_html/magento/app/code/local/Company/NewProduct
     magetool create block ProductViewCase
 
 (To create a helper or a model with the same name, replace block with
@@ -82,32 +81,30 @@ either helper or model, respectively.)
       
 This will not only define a skeleton PHP class in
 Block/ProductViewCase.php; it will also update the module's
-configuration file to tell Magento that the module has one or more Block
+configuration file to tell Mage that the module has one or more Block
 classes:
 
     ...
     <global>
       ...
-        <blocks>
-	  <newproduct>
-	    <class>Company_NewProduct_Block</class>
-	  </newproduct>
-	</blocks>
-        ...
+      <blocks>
+        <newproduct>
+          <class>Company_NewProduct_Block</class>
+        </newproduct>
+      </blocks>
+      ...
     </global>
     ...
     
 
-Registering blocks, helpers, or models
---------------------------------------
+Registering classes
+-------------------
 
-Sometimes you might be working on a module where blocks, helpers, or
-models have been defined manually but where the module's configuration
-file has not been updated accordingly. To register the presence of
-these kinds of classes in the configuration file, use the register
-action, e.g.:
+Sometimes you might be working on a module where classes have been
+defined manually but where the module's configuration file has not
+been updated accordingly. To register the presence of these kinds of
+classes in the configuration file, use the register action, e.g.:
 
-    cd ~/public_html/magento/app/code/local/Company/NewProduct
     magetool register block
 
 This will update the configuration file the same way magetool create
@@ -128,7 +125,6 @@ Mage_Core_Helper_Abstract.
 To manually specify which superclass a PHP class should extend, use
 the -s or --superclass option:
 
-    cd ~/public_html/magento/app/code/local/Company/NewProduct
     magetool -s Mage_Catalog_Helper_Image create helper Data
 
 This will define a PHP class in Helper/Data.php which extends
@@ -138,15 +134,13 @@ Mage_Catalog_Helper_Image.
 Overriding a class
 ------------------
 
-To tell Magento that a created class should override its superclass, use
+To tell Mage that a created class should override its superclass, use
 the -o or --override option.
 
 To illustrate, the following invocation will define a block in
 Block/Over.php which extends and overrides the class
 Mage_Catalog_Block_Product_View_Type_Simple:
 
-      
-    cd ~/public_html/magento/app/code/local/Company/NewProduct
     magetool -os Mage_Catalog_Block_Product_View_Type_Simple create block Over
 
 
