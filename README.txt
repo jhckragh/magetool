@@ -34,7 +34,7 @@ Then, as root, run
 To run Magetool you need to have the following software installed:
 
  * Python 2.6
- * lxml
+ * lxml[3]
 
 On Ubuntu Linux you can install these dependencies through apt:
 
