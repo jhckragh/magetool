@@ -28,6 +28,10 @@
 from magetool.libraries.globalclass import GlobalClass
 
 class Helper(GlobalClass):
+    """Class which represents Mage helpers, i.e., PHP classes which go in
+    a module's Helper/ directory.
+
+    """
     @staticmethod
     def help():
         """Print a help message describing this command."""

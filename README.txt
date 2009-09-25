@@ -63,8 +63,9 @@ Please send feedback and bug reports to jhckragh [at] gmail [dot] com.
 
 ## Known bugs ##
 
- * Overriding abstract classes is unsupported. (For details on how to
-   override an abstract class manually, see the community forum[4].)
+ * Overriding controllers and abstract classes is unsupported. (For
+   details on how to do these things manually, see the community
+   forum[4][5].)
 
  * There's no option for specifying a custom frontName when creating
    controllers. Technically the frontName doesn't have to match the
@@ -80,6 +81,7 @@ Please send feedback and bug reports to jhckragh [at] gmail [dot] com.
 [2] <http://www.magentocommerce.com/>
 [3] <http://codespeak.net/lxml/index.html#download>
 [4] <http://www.magentocommerce.com/boards/viewthread/18494/#t151509>
+[5] <http://www.magentocommerce.com/boards/viewthread/37244/#t128068>
 
 
 ## Legal ##

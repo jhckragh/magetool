@@ -28,6 +28,10 @@
 from magetool.libraries.globalclass import GlobalClass
 
 class Block(GlobalClass):
+    """Class representing Mage blocks, i.e., PHP classes which go in
+    a module's Block/ directory.
+
+    """
     @staticmethod
     def help():
         """Print a help message describing this command."""

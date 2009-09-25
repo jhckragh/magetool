@@ -30,6 +30,11 @@ from magetool.libraries.cls import Class
 from magetool.libraries.core import get_config, put_config
 
 class Controller(Class):
+    """Class representing Mage controllers, i.e., PHP classes which go
+    in a module's controllers/ directory and whose names end with
+    'Controller'.
+
+    """
     def __init__(self, superclass=None, router=None):
         """Initialize the controller, e.g., by storing run-time arguments to
         the configure method.
@@ -53,8 +58,8 @@ class Controller(Class):
 
         Args:
             name: The name of the controller, with or without the
-                  "Controller" suffix, e.g., "IndexController" or
-                  "Tracking".
+                  'Controller' suffix, e.g., 'IndexController' or
+                  'Tracking'.
 
         """
         suffix = "controller"
@@ -136,12 +141,12 @@ Examples:
 
   magetool -r admin create controller order
         Define a PHP class in controllers/OrderController.php and configure
-        a route in etc/config.xml using the "admin" router.
+        a route in etc/config.xml using the 'admin' router.
 
   magetool -r admin -s Mage_Adminhtml_IndexController create controller order
         Define a PHP class in controllers/OrderController.php which extends
         the class Mage_Adminhtml_IndexController and configure a route in
-        etc/config.xml using the "admin" router.
+        etc/config.xml using the 'admin' router.
 
   magetool register controller
         Configure a route in etc/config.xml so Mage can dispatch
