@@ -48,8 +48,15 @@ class GlobalClass(Class):
 
         """
         Class.__init__(self)
-        self.superclass = superclass
+        self.superclass = self._infer_super(superclass)
         self.override = override
+
+    def _infer_super(self, superclass):
+        """Infer the global class's superclass if none is supplied."""
+        if superclass is None:
+            end = "Template" if self.type == "block" else "Abstract"
+            superclass = "Mage_Core_%s_%s" % (self.type.capitalize(), end)
+        return superclass
 
     def create(self, name):
         """Create the global class.
@@ -63,11 +70,6 @@ class GlobalClass(Class):
 
         """
         self.name = name
-        if self.superclass is None:
-            superclass = "Mage_Core_%s_%s"
-            end = "Template" if self.type == "block" else "Abstract"
-            self.superclass = superclass % (self.type.capitalize(), end)
-
         self._create_class(name, self.superclass)
         self.register()
 
