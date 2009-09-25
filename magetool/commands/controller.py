@@ -48,16 +48,13 @@ class Controller(Class):
         self.router = router if router else "standard"
         self.front_name = self.module["name"].lower()
 
-    def create(self, name):
-        """Create the controller.
-
-        Dispatch requests to create an empty controller class and
-        update the module's configuration file.
+    def _format_name(self, name):
+        """Format a name according to the naming convention for controllers.
 
         Args:
-            name: Name of the controller with or without the
-                  "Controller" suffix, e.g., "IndexController"
-                  or "Tracking".
+            name: The name of the controller, with or without the
+                  "Controller" suffix, e.g., "IndexController" or
+                  "Tracking".
 
         """
         suffix = "controller"
@@ -65,9 +62,18 @@ class Controller(Class):
             name = name[:-len(suffix)]
         substrings = name.split("_")
         substrings[-1] = substrings[-1].capitalize() + "Controller"
-        self.name = "_".join(substrings)
+        name = "_".join(substrings)
+        return name
 
-        self._create_class(self.name, self.superclass)
+    def create(self, name):
+        """Create the controller.
+
+        Dispatch requests to create an empty controller class and
+        update the module's configuration file.
+
+        """
+        name = self._format_name(name)
+        self._create_class(name, self.superclass)
         self.register()
 
     def register(self):
