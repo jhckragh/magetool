@@ -36,8 +36,7 @@ class Controller(Class):
 
     """
     def __init__(self, superclass=None, router=None):
-        """Initialize the controller, e.g., by storing run-time arguments to
-        the configure method.
+        """Initialize the controller, e.g., by storing run-time arguments.
 
         Args:
             superclass: Full name of the controller's superclass,
@@ -48,9 +47,8 @@ class Controller(Class):
 
         """
         Class.__init__(self)
-        default = "Mage_Core_Controller_Front_Action"
-        self.superclass = superclass if superclass else default
-        self.router = router if router else "standard"
+        self.superclass = superclass or "Mage_Core_Controller_Front_Action"
+        self.router = router or "standard"
         self.front_name = self.module["name"].lower()
 
     def _format_name(self, name):
@@ -69,6 +67,30 @@ class Controller(Class):
         substrings[-1] = substrings[-1].capitalize() + "Controller"
         name = "_".join(substrings)
         return name
+
+    def _add_route(self, elem):
+        """Add a <routers> element with associated sub elements to elem.
+
+        Args:
+            elem: An lxml.etree._Element object mapping to a <frontend>
+                  element.
+
+        Return:
+            An lxml.etree._Element object.
+
+        """
+        if elem.find("routers") is not None:
+            return # Bail (assume that a route already exists).
+        routers = etree.SubElement(elem, "routers")
+        module_name_lower = etree.SubElement(routers, self.front_name)
+        use = etree.SubElement(module_name_lower, "use")
+        use.text = self.router
+        args = etree.SubElement(module_name_lower, "args")
+        module = etree.SubElement(args, "module")
+        module.text = "%s_%s" % (self.module["namespace"], self.module["name"])
+        front_name = etree.SubElement(args, "frontName")
+        front_name.text = self.front_name
+        return elem
 
     def create(self, name):
         """Create the controller.
@@ -91,24 +113,10 @@ class Controller(Class):
         """
         config = get_config()
         frontend = config.find("frontend")
-        if config.xpath("/config/frontend"):
-            if config.xpath("/config/frontend/routers"):
-                return # Assume that a route has already been configured.
-        else:
+        if frontend is None:
             frontend = etree.SubElement(config, "frontend")
-
-        # Now we're sure frontend exists, so we
-        # can add child elements to it.
-        routers = etree.SubElement(frontend, "routers")
-        module_name_lower = etree.SubElement(routers, self.front_name)
-        use = etree.SubElement(module_name_lower, "use")
-        use.text = self.router
-        args = etree.SubElement(module_name_lower, "args")
-        module = etree.SubElement(args, "module")
-        module.text = "%s_%s" % (self.module["namespace"], self.module["name"])
-        front_name = etree.SubElement(args, "frontName")
-        front_name.text = self.front_name
-
+        # Now we're sure frontend exists, so we can add sub elements to it.
+        frontend = self._add_route(frontend)
         put_config(config)
 
     @staticmethod
