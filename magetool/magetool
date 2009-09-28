@@ -30,7 +30,7 @@
 """A CLI utility to automate repetitive tasks in Mage development."""
 
 __author__ = "jhckragh@gmail.com (Jacob Kragh)"
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 from optparse import OptionParser
 
@@ -47,6 +47,7 @@ The following commands are supported:
 See 'magetool help COMMAND' for more information on a specific command."""
     version = "%prog version " + __version__
     parser = OptionParser(usage=usage, version=version, add_help_option=False)
+    parser.add_option("-f", "--frontname", dest="front_name")
     parser.add_option("-h", "--help", action="store_true", dest="show_help")
     parser.add_option("-o", "--override", action="store_true", dest="override")
     parser.add_option("-s", "--superclass", dest="superclass")

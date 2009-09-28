@@ -67,10 +67,6 @@ Please send feedback and bug reports to jhckragh [at] gmail [dot] com.
    details on how to do these things manually, see the community
    forum[4][5].)
 
- * There's no option for specifying a custom frontName when creating
-   controllers. Technically the frontName doesn't have to match the
-   module name, but currently Magetool enforces this convention.
-
  * Creating multiple routers for a single module or editing existing
    routers is unsupported.
 

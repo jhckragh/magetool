@@ -35,10 +35,13 @@ class Controller(Class):
     'Controller'.
 
     """
-    def __init__(self, superclass=None, router=None):
+    def __init__(self, front_name=None, superclass=None, router=None):
         """Initialize the controller, e.g., by storing run-time arguments.
 
         Args:
+            front_name: The string to use as the module's
+                        frontName. By convention this string
+                        is the module's name, lower-cased.
             superclass: Full name of the controller's superclass,
                         e.g., "Mage_Adminhtml_Controller_Action".
             router: Name of the front controller router to use.
@@ -47,9 +50,9 @@ class Controller(Class):
 
         """
         Class.__init__(self)
+        self.front_name = front_name or self.module["name"].lower()
         self.superclass = superclass or "Mage_Core_Controller_Front_Action"
         self.router = router or "standard"
-        self.front_name = self.module["name"].lower()
 
     def _format_name(self, name):
         """Format a name according to the naming convention for controllers.
@@ -122,13 +125,12 @@ class Controller(Class):
     @staticmethod
     def help():
         """Print a help message describing this command."""
-        print """Usage: magetool [OPTION]... create controller NAME
-
-Description:
-  Create a controller called NAME in controllers/ and register it in the
-  module's configuration file. The "Controller" suffix in NAME can be omitted.
+        print """Usage: magetool [OPTION]... [create|register] controller NAME
 
 Options:
+  -f, --frontname=FRONTNAME    Use FRONTNAME as the module's frontName.
+                               Default: The module's name, lower-cased.
+
   -s, --superclass=SUPERCLASS  Make the controller extend SUPERCLASS.
                                Default: Mage_Core_Controller_Front_Action.
 
