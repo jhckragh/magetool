@@ -63,12 +63,8 @@ Please send feedback and bug reports to jhckragh [at] gmail [dot] com.
 
 ## Known bugs ##
 
- * Overriding controllers and abstract classes is unsupported. (For
-   details on how to do these things manually, see the community
-   forum[4][5].)
-
- * Creating multiple routers for a single module or editing existing
-   routers is unsupported.
+Overriding abstract classes is unsupported. (For details on how to do
+this manually, see the community forum[4].)
 
 
 ## Links ##
@@ -77,7 +73,6 @@ Please send feedback and bug reports to jhckragh [at] gmail [dot] com.
 [2] <http://www.magentocommerce.com/>
 [3] <http://codespeak.net/lxml/index.html#download>
 [4] <http://www.magentocommerce.com/boards/viewthread/18494/#t151509>
-[5] <http://www.magentocommerce.com/boards/viewthread/37244/#t128068>
 
 
 ## Legal ##

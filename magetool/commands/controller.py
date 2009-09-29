@@ -35,13 +35,17 @@ class Controller(Class):
     'Controller'.
 
     """
-    def __init__(self, front_name=None, superclass=None, router=None):
+    def __init__(self, front_name=None, override=False, superclass=None,
+                 router=None):
         """Initialize the controller, e.g., by storing run-time arguments.
 
         Args:
             front_name: The string to use as the module's
                         frontName. By convention this string
                         is the module's name, lower-cased.
+            override: Whether the module's controller(s) should
+                      override the controller(s) of the module
+                      to which its superclass belongs.
             superclass: Full name of the controller's superclass,
                         e.g., "Mage_Adminhtml_Controller_Action".
             router: Name of the front controller router to use.
@@ -51,6 +55,7 @@ class Controller(Class):
         """
         Class.__init__(self)
         self.front_name = front_name or self.module["name"].lower()
+        self.override = override
         self.superclass = superclass or "Mage_Core_Controller_Front_Action"
         self.router = router or "standard"
 
@@ -82,17 +87,54 @@ class Controller(Class):
             An lxml.etree._Element object.
 
         """
-        if elem.find("routers") is not None:
+        xpath = "/config/%s/routers/%s"
+        route = elem.xpath(xpath % (elem.tag, self.module["name"].lower()))
+        if route:
             return # Bail (assume that a route already exists).
-        routers = etree.SubElement(elem, "routers")
-        module_name_lower = etree.SubElement(routers, self.front_name)
-        use = etree.SubElement(module_name_lower, "use")
+
+        routers = elem.find("routers")
+        if routers is None:
+            routers = etree.SubElement(elem, "routers")
+        module_lower = etree.SubElement(routers, self.module["name"].lower())
+        use = etree.SubElement(module_lower, "use")
         use.text = self.router
-        args = etree.SubElement(module_name_lower, "args")
+        args = etree.SubElement(module_lower, "args")
         module = etree.SubElement(args, "module")
         module.text = "%s_%s" % (self.module["namespace"], self.module["name"])
         front_name = etree.SubElement(args, "frontName")
         front_name.text = self.front_name
+        return elem
+
+    def _add_override(self, elem):
+        """Make the module's controller override another module's controllers.
+
+        Given a <frontend> element, create the sub elements necessary to
+        make the module's controller(s) override the controller(s) of the
+        module to which self.superclass belongs.
+
+        Args:
+            elem: An lxml.etree._Element object mapping to a <frontend>
+                  element.
+
+        Return:
+            An lxml.etree._Element object.
+
+        """
+        substrings = self.superclass.split("_")
+        super_module = substrings[1].lower()
+        super_prefix = "_".join(substrings[:2])
+
+        routers = elem.find("routers")
+        if routers is None:
+            routers = etree.SubElement(elem, "routers")
+
+        super_module = etree.SubElement(routers, super_module)
+        args = etree.SubElement(super_module, "args")
+        modules = etree.SubElement(args, "modules")
+        module_lower = etree.SubElement(modules, self.module["name"].lower())
+        module_lower.set("before", super_prefix)
+        module_lower.text = "_".join((self.module["namespace"],
+                                           self.module["name"]))
         return elem
 
     def create(self, name):
@@ -119,7 +161,10 @@ class Controller(Class):
         if frontend is None:
             frontend = etree.SubElement(config, "frontend")
         # Now we're sure frontend exists, so we can add sub elements to it.
-        frontend = self._add_route(frontend)
+        if self.override:
+            frontend = self._add_override(frontend)
+        else:
+            frontend = self._add_route(frontend)
         put_config(config)
 
     @staticmethod
@@ -130,6 +175,11 @@ class Controller(Class):
 Options:
   -f, --frontname=FRONTNAME    Use FRONTNAME as the module's frontName.
                                Default: The module's name, lower-cased.
+
+  -o, --override               Tell Mage that the controller overrides
+                               the controllers of the module to which
+                               its superclass belongs (use with
+                               --superclass=SUPERCLASS.)
 
   -s, --superclass=SUPERCLASS  Make the controller extend SUPERCLASS.
                                Default: Mage_Core_Controller_Front_Action.
@@ -148,6 +198,10 @@ Examples:
   magetool -s Mage_Adminhtml_Controller_Action create controller OrderController
         Define a PHP class in controllers/OrderController.php which extends
         the class Mage_Adminhtml_Controller_Action.
+
+  magetool -os Mage_Downloadable_DownloadController create controller Over
+        Define a PHP class in controllers/OverController.php which extends
+        and overrides the class Mage_Downloadable_DownloadController.
 
   magetool -r admin create controller order
         Define a PHP class in controllers/OrderController.php and configure
