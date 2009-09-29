@@ -128,6 +128,8 @@ class Controller(Class):
         if routers is None:
             routers = etree.SubElement(elem, "routers")
 
+        if routers.find(super_module) is not None:
+            return # Bail (assume that an override already exists).
         super_module = etree.SubElement(routers, super_module)
         args = etree.SubElement(super_module, "args")
         modules = etree.SubElement(args, "modules")
