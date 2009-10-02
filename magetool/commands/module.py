@@ -50,13 +50,6 @@ class Module:
         except AttributeError:
             raise EnvironmentError("Wrong execution directory.")
 
-    def identify(self):
-        """Return information about the module which other classes can use."""
-        return {"name": self.name,
-                "namespace": self.namespace,
-                "code_pool": self.code_pool,
-                "path": self.path}
-
     def create(self, name):
         """Create a directory structure and a configuration file for the
         module, using the name parameter as the module's name.
