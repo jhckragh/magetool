@@ -1,4 +1,5 @@
 import os
+from lxml import etree
 from magetool.commands.module import Module
 from string import Template
 
@@ -16,7 +17,8 @@ class Class(object):
         self.type = self._get_type()
         self.template = self._get_template()
         self.reg = True
-        self.module = Module().identify()
+        self.module = Module()
+        self.config = self.module.path + "/etc/config.xml".replace("/",os.sep)
 
     def _get_type(self):
         """Get the name of the class's type.
@@ -27,6 +29,26 @@ class Class(object):
 
         """
         return self.__class__.__name__.lower()
+
+    def _get_config(self):
+        """Read and parse a module configuration file, returning the root
+        element of the file.
+
+        """
+        parser = etree.XMLParser(remove_blank_text=True)
+        source = open(self.config)
+        config = etree.parse(source, parser).getroot()
+        source.close()
+        return config
+
+    def _put_config(self, element):
+        """Write a formatted serialisation of element to a module configuration
+        file.
+
+        """
+        dest = open(self.config, "w")
+        dest.write(etree.tostring(element, pretty_print=True))
+        dest.close()
 
     def _get_template(self):
         """Import the template file for the class. (We assume that the
@@ -49,8 +71,8 @@ class Class(object):
 
         """
         template = Template(self.template)
-        template = template.substitute(namespace=self.module["namespace"],
-                                       module_name=self.module["name"],
+        template = template.substitute(namespace=self.module.namespace,
+                                       module_name=self.module.name,
                                        name=name,
                                        superclass=superclass)
         return template

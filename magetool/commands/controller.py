@@ -27,7 +27,6 @@
 
 from lxml import etree
 from magetool.libraries.cls import Class
-from magetool.libraries.core import get_config, put_config
 
 class Controller(Class):
     """Class representing Mage controllers, i.e., PHP classes which go
@@ -54,7 +53,7 @@ class Controller(Class):
 
         """
         Class.__init__(self)
-        self.front_name = front_name or self.module["name"].lower()
+        self.front_name = front_name or self.module.name.lower()
         self.override = override
         self.superclass = superclass or "Mage_Core_Controller_Front_Action"
         self.router = router or "standard"
@@ -88,19 +87,19 @@ class Controller(Class):
 
         """
         xpath = "/config/%s/routers/%s"
-        route = elem.xpath(xpath % (elem.tag, self.module["name"].lower()))
+        route = elem.xpath(xpath % (elem.tag, self.module.name.lower()))
         if route:
             return # Bail (assume that a route already exists).
 
         routers = elem.find("routers")
         if routers is None:
             routers = etree.SubElement(elem, "routers")
-        module_lower = etree.SubElement(routers, self.module["name"].lower())
+        module_lower = etree.SubElement(routers, self.module.name.lower())
         use = etree.SubElement(module_lower, "use")
         use.text = self.router
         args = etree.SubElement(module_lower, "args")
         module = etree.SubElement(args, "module")
-        module.text = "%s_%s" % (self.module["namespace"], self.module["name"])
+        module.text = "%s_%s" % (self.module.namespace, self.module.name)
         front_name = etree.SubElement(args, "frontName")
         front_name.text = self.front_name
         return elem
@@ -133,10 +132,9 @@ class Controller(Class):
         super_module = etree.SubElement(routers, super_module)
         args = etree.SubElement(super_module, "args")
         modules = etree.SubElement(args, "modules")
-        module_lower = etree.SubElement(modules, self.module["name"].lower())
+        module_lower = etree.SubElement(modules, self.module.name.lower())
         module_lower.set("before", super_prefix)
-        module_lower.text = "_".join((self.module["namespace"],
-                                           self.module["name"]))
+        module_lower.text = "_".join((self.module.namespace, self.module.name))
         return elem
 
     def create(self, name):
@@ -158,7 +156,7 @@ class Controller(Class):
         controller(s).
 
         """
-        config = get_config()
+        config = self._get_config()
         frontend = config.find("frontend")
         if frontend is None:
             frontend = etree.SubElement(config, "frontend")
@@ -167,7 +165,7 @@ class Controller(Class):
             frontend = self._add_override(frontend)
         else:
             frontend = self._add_route(frontend)
-        put_config(config)
+        self._put_config(config)
 
     @staticmethod
     def help():

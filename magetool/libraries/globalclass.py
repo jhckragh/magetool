@@ -27,7 +27,6 @@
 
 from lxml import etree
 from magetool.libraries.cls import Class
-from magetool.libraries.core import get_config, put_config
 
 class GlobalClass(Class):
     """Superclass for 'global classes'.
@@ -81,9 +80,9 @@ class GlobalClass(Class):
 
         """
         type_tag = self.type + "s"
-        module = self.module["name"].lower()
+        module = self.module.name.lower()
 
-        config = get_config()
+        config = self._get_config()
         if config.xpath("/config/global"):
             xpath = "/config/global/%s/%s"
             tags = (type_tag, module)
@@ -105,12 +104,12 @@ class GlobalClass(Class):
         if self.reg and not self.override:
             module = etree.SubElement(type_, module)
             class_ = etree.SubElement(module, "class")
-            class_.text = "%s_%s_%s" % (self.module["namespace"],
-                                        self.module["name"],
+            class_.text = "%s_%s_%s" % (self.module.namespace,
+                                        self.module.name,
                                         self.type.capitalize())
         if self.override:
             self._add_rewrite(type_)
-        put_config(config)
+        self._put_config(config)
 
     def _add_rewrite(self, elem):
         """Add a rewrite directive to the <elem> element.
@@ -128,7 +127,7 @@ class GlobalClass(Class):
         sc_module = etree.SubElement(elem, sc_module)
         rewrite = etree.SubElement(sc_module, "rewrite")
         sc_name = etree.SubElement(rewrite, sc_name)
-        sc_name.text = "%s_%s_%s_%s" % (self.module["namespace"],
-                                        self.module["name"],
+        sc_name.text = "%s_%s_%s_%s" % (self.module.namespace,
+                                        self.module.name,
                                         self.type.capitalize(),
                                         self.name)

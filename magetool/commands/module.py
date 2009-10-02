@@ -25,7 +25,7 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-import os
+import os, re
 import magetool.settings as settings
 from magetool.templates.config_xml import config_xml
 from magetool.templates.regfile import regfile
@@ -38,27 +38,24 @@ class Module:
         name.
 
         """
-        self._configure()
-
-    def _configure(self):
-        """Retrieve and store the module's code pool, namespace, and name."""
-        path = os.getcwd().split(os.sep)
-        grandparent, parent, cwd = path[-3:]
-        if grandparent in settings.code_pools:
-            self.code_pool = grandparent
-            self.namespace = parent
-            self.name = cwd
-        elif parent in settings.code_pools:
-            self.code_pool = parent
-            self.namespace = cwd
-        else:
+        cwd = os.getcwd()
+        code_pools = "|".join(settings.code_pools)
+        pattern = "/app/code/(%s)/([A-Za-z]+)/?([A-Za-z]+)?" % code_pools
+        match = re.search(pattern, cwd)
+        try:
+            self.code_pool = match.group(1)
+            self.namespace = match.group(2)
+            self.name = match.group(3)
+            self.path = cwd[:match.end()]
+        except AttributeError:
             raise EnvironmentError("Wrong execution directory.")
 
     def identify(self):
         """Return information about the module which other classes can use."""
         return {"name": self.name,
                 "namespace": self.namespace,
-                "code_pool": self.code_pool}
+                "code_pool": self.code_pool,
+                "path": self.path}
 
     def create(self, name):
         """Create a directory structure and a configuration file for the
