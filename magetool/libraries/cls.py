@@ -83,7 +83,7 @@ class Class(object):
         directory = ("controllers" if self.type == "controller" else
                      self.type.capitalize())
 
-        path = directory + os.sep
+        path = self.module.path + os.sep + directory + os.sep
         # Check if the class name contains underscores. If it does, interpret
         # them as directory separators.
         if not name.find("_") == -1:
