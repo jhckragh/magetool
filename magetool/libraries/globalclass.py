@@ -72,44 +72,22 @@ class GlobalClass(Class):
         self._create_class(name, self.superclass)
         self.register()
 
-    def register(self):
-        """Tell Mage that the module has one or more self.type global classes.
+    def _add_classreg(self, elem):
+        """Add a class registration directive to the <elem> element.
 
-        Update the module's configuration file to register that the
-        module has one or more global classes of type self.type.
+        Tell Mage that the module has one or more self.type global classes.
+
+        Args:
+            elem: The lxml.etree._Element object which the registration
+                  directive should be added to. This should be a type_
+                  element, e.g., <blocks> or <models>.
 
         """
-        type_tag = self.type + "s"
-        module = self.module.name.lower()
-
-        config = self._get_config()
-        if config.xpath("/config/global"):
-            xpath = "/config/global/%s/%s"
-            tags = (type_tag, module)
-            # Check if global classes of type self.type are already registered
-            if config.xpath(xpath % tags):
-                self.reg = False
-            # Check if a rewrite directive already exists
-            if self.override:
-                tags = (type_tag, self.superclass.split("_")[1].lower())
-                if config.xpath(xpath % tags):
-                    self.override = False
-
-        # Make sure global_ and type_ exist
-        global_ = config.xpath("/config/global")
-        global_ = global_[0] if global_ else etree.SubElement(config, "global")
-        type_ = config.xpath("/config/global/%s" % type_tag)
-        type_ = type_[0] if type_ else etree.SubElement(global_, type_tag)
-
-        if self.reg and not self.override:
-            module = etree.SubElement(type_, module)
-            class_ = etree.SubElement(module, "class")
-            class_.text = "%s_%s_%s" % (self.module.namespace,
-                                        self.module.name,
-                                        self.type.capitalize())
-        if self.override:
-            self._add_rewrite(type_)
-        self._put_config(config)
+        module = etree.SubElement(elem, self.module.name.lower())
+        class_ = etree.SubElement(module, "class")
+        class_.text = "%s_%s_%s" % (self.module.namespace,
+                                    self.module.name,
+                                    self.type.capitalize())
 
     def _add_rewrite(self, elem):
         """Add a rewrite directive to the <elem> element.
@@ -131,3 +109,38 @@ class GlobalClass(Class):
                                         self.module.name,
                                         self.type.capitalize(),
                                         self.name)
+
+    def register(self):
+        """Tell Mage that the module has one or more self.type global classes.
+
+        Update the module's configuration file to register that the
+        module has one or more global classes of type self.type.
+
+        """
+        type_tag = self.type + "s"
+
+        config = self._get_config()
+        if config.xpath("/config/global"):
+            xpath = "/config/global/%s/" % (type_tag,)
+            tag = self.module.name.lower()
+            # Check if global classes of type self.type are already registered
+            print xpath + tag
+            if config.xpath(xpath + tag):
+                self.reg = False
+            # Check if a rewrite directive already exists
+            if self.override:
+                tag = self.superclass.split("_")[1].lower()
+                if config.xpath(xpath + tag):
+                    self.override = False
+
+        # Make sure global_ and type_ exist
+        global_ = config.xpath("/config/global")
+        global_ = global_[0] if global_ else etree.SubElement(config, "global")
+        type_ = config.xpath("/config/global/%s" % type_tag)
+        type_ = type_[0] if type_ else etree.SubElement(global_, type_tag)
+
+        if self.reg:
+            self._add_classreg(type_)
+        elif self.override:
+            self._add_rewrite(type_)
+        self._put_config(config)
