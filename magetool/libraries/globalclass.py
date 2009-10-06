@@ -124,7 +124,6 @@ class GlobalClass(Class):
             xpath = "/config/global/%s/" % (type_tag,)
             tag = self.module.name.lower()
             # Check if global classes of type self.type are already registered
-            print xpath + tag
             if config.xpath(xpath + tag):
                 self.reg = False
             # Check if a rewrite directive already exists
