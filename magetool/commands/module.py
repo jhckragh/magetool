@@ -57,15 +57,11 @@ class Module:
 
         """
         self.name = name
-        self._create_directories()
-        self._create_config()
-        self._create_regfile()
-
-    def _create_directories(self):
-        """Create a directory structure for the module."""
         os.mkdir(self.name)
         for directory in settings.directories:
             os.mkdir("%s/%s" % (self.name, directory))
+        self._create_config()
+        self._create_regfile()
 
     def _create_config(self):
         """Create a configuration file for the module."""
