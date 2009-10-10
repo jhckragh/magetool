@@ -61,7 +61,7 @@ Here's a sample Magetool workflow:
 Please send feedback and bug reports to jhckragh [at] gmail [dot] com.
 
 
-## Known bugs ##
+## Bugs ##
 
 Overriding abstract classes is unsupported. (For details on how to do
 this manually, see the community forum[4].)

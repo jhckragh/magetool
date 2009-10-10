@@ -29,15 +29,17 @@ from lxml import etree
 from magetool.libraries.cls import Class
 
 class GlobalClass(Class):
-    """Superclass for 'global classes'.
+    """Base class for 'global classes'.
 
-    (Global classes are classes whose presence must be registered within
-    the <global> element of a module's configuration file to be loaded by
-    Mage.)
+    (Global classes are classes whose presence must be registered
+    within the <global> element of a module's configuration file in
+    order to be loaded by Mage.)
 
     """
     def __init__(self, superclass=None, override=False):
-        """Initialize the global class by storing run-time arguments.
+        """Initialize the global class, e.g., by storing run-time
+        arguments and by retrieving and preparing the module's
+        configuration file.
 
         Args:
             superclass: Full name of the global class's superclass,
@@ -49,6 +51,11 @@ class GlobalClass(Class):
         Class.__init__(self)
         self.superclass = self._infer_super(superclass)
         self.override = override
+        self.type_tag = self.type + "s"
+        self.config = self.get_config()
+        self._prepare_config()
+        self.xpath = "/config/global/" + self.type_tag
+        self.type_elem = self.config.xpath(self.xpath)[0]
 
     def _infer_super(self, superclass):
         """Infer the global class's superclass if none is supplied."""
@@ -56,6 +63,23 @@ class GlobalClass(Class):
             end = "Template" if self.type == "block" else "Abstract"
             superclass = "Mage_Core_%s_%s" % (self.type.capitalize(), end)
         return superclass
+
+    def _prepare_config(self):
+        """Prepare the module's configuration file for class registration.
+
+        To make Mage aware that the module has one or more global
+        classes of type self.type, the module's configuration file
+        must have a <global> element. Furthermore, this <global>
+        element must have a sub element whose tag matches the type of
+        the global class. If these elements don't exist, we create
+        them.
+
+        """
+        global_ = self.config.xpath("/config/global")
+        global_ = (global_[0] if global_ else
+                   etree.SubElement(self.config, "global"))
+        type_ = self.config.xpath("/config/global/" + self.type_tag)
+        type_ = type_[0] if type_ else etree.SubElement(global_, self.type_tag)
 
     def create(self, name):
         """Create the global class.
@@ -70,76 +94,37 @@ class GlobalClass(Class):
         """
         self.name = name
         self._create_class(name, self.superclass)
-        self.register()
-
-    def _add_classreg(self, elem):
-        """Add a class registration directive to the <elem> element.
-
-        Tell Mage that the module has one or more self.type global classes.
-
-        Args:
-            elem: The lxml.etree._Element object which the registration
-                  directive should be added to. This should be a type_
-                  element, e.g., <blocks> or <models>.
-
-        """
-        module = etree.SubElement(elem, self.module.name.lower())
-        class_ = etree.SubElement(module, "class")
-        class_.text = "%s_%s_%s" % (self.module.namespace,
-                                    self.module.name,
-                                    self.type.capitalize())
-
-    def _add_rewrite(self, elem):
-        """Add a rewrite directive to the <elem> element.
-
-        Args:
-            elem: The lxml.etree._Element object which the <rewrite>
-                  element should be added to. This should be a type_
-                  element, e.g., <blocks> or <models>.
-
-        """
-        sc_substrings = self.superclass.split("_")
-        sc_module = sc_substrings[1].lower()
-        sc_name = "_".join(sc_substrings[3:]).lower() # e.g., "product_view"
-
-        sc_module = etree.SubElement(elem, sc_module)
-        rewrite = etree.SubElement(sc_module, "rewrite")
-        sc_name = etree.SubElement(rewrite, sc_name)
-        sc_name.text = "%s_%s_%s_%s" % (self.module.namespace,
-                                        self.module.name,
-                                        self.type.capitalize(),
-                                        self.name)
+        if self.override:
+            self._override()
+        else:
+            self.register()
+        self.put_config(self.config)
 
     def register(self):
-        """Tell Mage that the module has one or more self.type global classes.
-
-        Update the module's configuration file to register that the
-        module has one or more global classes of type self.type.
+        """Tell Mage that the module has one or more self.type global
+        classes.
 
         """
-        type_tag = self.type + "s"
+        tag = self.module.name.lower()
+        if not self.config.xpath(self.xpath + "/" + tag):
+            module = etree.SubElement(self.type_elem, self.module.name.lower())
+            class_ = etree.SubElement(module, "class")
+            class_.text = "%s_%s_%s" % (self.module.namespace,
+                                        self.module.name,
+                                        self.type.capitalize())
 
-        config = self._get_config()
-        if config.xpath("/config/global"):
-            xpath = "/config/global/%s/" % (type_tag,)
-            tag = self.module.name.lower()
-            # Check if global classes of type self.type are already registered
-            if config.xpath(xpath + tag):
-                self.reg = False
-            # Check if a rewrite directive already exists
-            if self.override:
-                tag = self.superclass.split("_")[1].lower()
-                if config.xpath(xpath + tag):
-                    self.override = False
+    def _override(self):
+        """Tell Mage that this global class overrides self.superclass."""
+        tag = self.superclass.split("_")[1].lower()
+        if not self.config.xpath(self.xpath + "/" + tag):
+            substrings = self.superclass.split("_")
+            module = substrings[1].lower()
+            name = "_".join(substrings[3:]).lower()
 
-        # Make sure global_ and type_ exist
-        global_ = config.xpath("/config/global")
-        global_ = global_[0] if global_ else etree.SubElement(config, "global")
-        type_ = config.xpath("/config/global/%s" % type_tag)
-        type_ = type_[0] if type_ else etree.SubElement(global_, type_tag)
-
-        if self.reg:
-            self._add_classreg(type_)
-        elif self.override:
-            self._add_rewrite(type_)
-        self._put_config(config)
+            module = etree.SubElement(self.type_elem, module)
+            rewrite = etree.SubElement(module, "rewrite")
+            name = etree.SubElement(rewrite, name)
+            name.text = "%s_%s_%s_%s" % (self.module.namespace,
+                                         self.module.name,
+                                         self.type.capitalize(),
+                                         self.name)

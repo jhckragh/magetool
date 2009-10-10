@@ -157,7 +157,7 @@ class Controller(Class):
         controller(s).
 
         """
-        config = self._get_config()
+        config = self.get_config()
         frontend = config.find("frontend")
         if frontend is None:
             frontend = etree.SubElement(config, "frontend")
@@ -166,7 +166,7 @@ class Controller(Class):
             frontend = self._add_override(frontend)
         else:
             frontend = self._add_route(frontend)
-        self._put_config(config)
+        self.put_config(config)
 
     @staticmethod
     def help():

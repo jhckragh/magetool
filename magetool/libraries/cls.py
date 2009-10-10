@@ -14,39 +14,28 @@ class Class(object):
         the module to which the class belongs.
 
         """
-        self.type = self._get_type()
+        self.type = self.__class__.__name__.lower()
         self.template = self._get_template()
-        self.reg = True
         self.module = Module()
-        self.config = self.module.path + "/etc/config.xml".replace("/",os.sep)
+        self.__config = self.module.path + "/etc/config.xml".replace("/",os.sep)
 
-    def _get_type(self):
-        """Get the name of the class's type.
-
-        At the time of writing there are four types of classes: block,
-        controller, helper, and model. We assume that subclasses are
-        named after these types.
-
-        """
-        return self.__class__.__name__.lower()
-
-    def _get_config(self):
+    def get_config(self):
         """Read and parse a module configuration file, returning the root
         element of the file.
 
         """
         parser = etree.XMLParser(remove_blank_text=True)
-        source = open(self.config)
+        source = open(self.__config)
         config = etree.parse(source, parser).getroot()
         source.close()
         return config
 
-    def _put_config(self, element):
+    def put_config(self, element):
         """Write a formatted serialisation of element to a module configuration
         file.
 
         """
-        dest = open(self.config, "w")
+        dest = open(self.__config, "w")
         dest.write(etree.tostring(element, pretty_print=True))
         dest.close()
 
