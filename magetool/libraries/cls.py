@@ -1,53 +1,9 @@
 import os
-from lxml import etree
-from magetool.commands.module import Module
+from magetool.libraries.command import Command
 from string import Template
 
-class Class(object):
-    """Superclass for PHP classes, e.g., blocks, controllers, helpers,
-    and models.
-
-    """
-    def __init__(self):
-        """Initialize the class by figuring out what kind of class it is
-        and by retrieving the class's template as well as information about
-        the module to which the class belongs.
-
-        """
-        self.type = self.__class__.__name__.lower()
-        self.template = self._get_template()
-        self.module = Module()
-        self.__config = self.module.path + "/etc/config.xml".replace("/",os.sep)
-
-    def get_config(self):
-        """Read and parse a module configuration file, returning the root
-        element of the file.
-
-        """
-        parser = etree.XMLParser(remove_blank_text=True)
-        source = open(self.__config)
-        config = etree.parse(source, parser).getroot()
-        source.close()
-        return config
-
-    def put_config(self, element):
-        """Write a formatted serialisation of element to a module configuration
-        file.
-
-        """
-        dest = open(self.__config, "w")
-        dest.write(etree.tostring(element, pretty_print=True))
-        dest.close()
-
-    def _get_template(self):
-        """Import the template file for the class. (We assume that the
-        class's template file is named after the class's type.)
-
-        """
-        template = __import__("magetool.templates." + self.type,
-                              globals(), locals(), ["magetool.templates"])
-        return template.string
-
+class Class(Command):
+    """Base class for Mage classes, e.g., blocks, controllers, and models."""
     def _fill_template(self, name, superclass):
         """Fill out the template file for a class.
 
@@ -65,6 +21,7 @@ class Class(object):
                                        name=name,
                                        superclass=superclass)
         return template
+
 
     def _create_class(self, name, superclass):
         """Create a skeleton PHP class."""

@@ -47,6 +47,7 @@ class Module:
             self.namespace = match.group(2)
             self.name = match.group(3)
             self.path = cwd[:match.end()]
+            self.cfg_path = self.path + "/etc/config.xml".replace("/", os.sep)
         except AttributeError:
             raise EnvironmentError("Wrong execution directory.")
 
