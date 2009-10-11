@@ -27,6 +27,7 @@
 
 from lxml import etree
 from magetool.libraries.cls import Class
+from magetool.libraries.util import find_or_create
 
 class GlobalClass(Class):
     """Base class for 'global classes'.
@@ -75,11 +76,8 @@ class GlobalClass(Class):
         them.
 
         """
-        global_ = self.config.xpath("/config/global")
-        global_ = (global_[0] if global_ else
-                   etree.SubElement(self.config, "global"))
-        type_ = self.config.xpath("/config/global/" + self.type_tag)
-        type_ = type_[0] if type_ else etree.SubElement(global_, self.type_tag)
+        global_ = find_or_create(self.config, "global")
+        type_ = find_or_create(global_, self.type_tag)
 
     def create(self, name):
         """Create the global class.
@@ -115,15 +113,14 @@ class GlobalClass(Class):
 
     def _override(self):
         """Tell Mage that this global class overrides self.superclass."""
-        tag = self.superclass.split("_")[1].lower()
-        if not self.config.xpath(self.xpath + "/" + tag):
-            substrings = self.superclass.split("_")
-            module = substrings[1].lower()
-            name = "_".join(substrings[3:]).lower()
-
-            module = etree.SubElement(self.type_elem, module)
-            rewrite = etree.SubElement(module, "rewrite")
-            name = etree.SubElement(rewrite, name)
+        substrings = self.superclass.split("_")
+        tags = {"module": substrings[1].lower(),
+                "name": "_".join(substrings[3:]).lower()} # e.g., product_view
+        elems = "/rewrite/".join((tags["module"], tags["name"]))
+        if not self.config.xpath(self.xpath + "/" + elems):
+            module = find_or_create(self.type_elem, tags["module"])
+            rewrite = find_or_create(module, "rewrite")
+            name = etree.SubElement(rewrite, tags["name"])
             name.text = "%s_%s_%s_%s" % (self.module.namespace,
                                          self.module.name,
                                          self.type.capitalize(),
