@@ -35,7 +35,7 @@ class Helper(GlobalClass):
     @staticmethod
     def help():
         """Print a help message describing this command."""
-        print """Usage: magetool [OPTION]... [create|register] helper [NAME]
+        print """Usage: magetool [OPTION]... (create|register) helper [NAME]
 
 Options:
   -s, --superclass=SUPERCLASS  Make the helper extend SUPERCLASS.

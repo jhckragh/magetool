@@ -5,12 +5,18 @@ from magetool.libraries.command import Command
 class Layout(Command):
     """Class representing a Mage layout."""
 
+    def _format_name(self, name):
+        """Add file type suffix to name if it doesn't already have one."""
+        if not name.endswith(".xml"):
+            name = name + ".xml"
+        return name
+
     def create(self, name):
         """Create the layout XML file and update the module's configuration
         file accordingly.
 
         """
-        name = name + ".xml"
+        name = self._format_name(name)
         path = os.path.normpath(self.module.path + (".." + os.sep) * 5 +
                                 "design/frontend/default/default/layout")
         dest = path + os.sep + name
@@ -21,6 +27,7 @@ class Layout(Command):
 
     def register(self, name):
         """Make Mage aware that the module supplies a layout file."""
+        name = self._format_name(name)
         config = self.get_config()
         # Make sure a <frontend> element exists.
         frontend = config.find("frontend")
@@ -39,3 +46,18 @@ class Layout(Command):
             file_ = etree.SubElement(module_lower, "file")
             file_.text = name
             self.put_config(config)
+
+    @staticmethod
+    def help():
+        """Print a help message describing this command."""
+        print """Usage: magetool (create|register) layout NAME
+
+Examples:
+  magetool create layout newproduct
+        Create a bare-bones layout file called newproduct.xml in
+        app/design/frontend/default/default/ and update the module's
+        configuration file accordingly.
+
+  magetool register layout newproduct
+        Update the module's configuration file to tell Mage that the module
+        supplies a layout file called newproduct.xml."""

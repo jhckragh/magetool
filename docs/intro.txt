@@ -68,8 +68,8 @@ This will do two things:
         ...
 
 
-Creating blocks, helpers, and models
-------------------------------------
+Creating a block, a helper, or a model
+--------------------------------------
 
 To create a block called ProductViewCase in a module, navigate to the
 module's directory and run Magetool like this:
@@ -95,20 +95,30 @@ classes:
       ...
     </global>
     ...
-    
 
-Registering classes
--------------------
 
-Sometimes you might be working on a module where classes have been
-defined manually but where the module's configuration file has not
-been updated accordingly. To register the presence of these kinds of
-classes in the configuration file, use the register action, e.g.:
+Creating a layout file
+----------------------
+
+To create a layout file called newproduct.xml in
+app/design/frontend/default/default/, run Magetool like this:
+
+    magetool create layout newproduct
+
+
+Registering files
+-----------------
+
+Sometimes you might be working on a module where classes or layout
+files have been defined manually but where the module's configuration
+file has not been updated accordingly. To register the presence of
+these kinds of files in the configuration file, use the register
+action, e.g.:
 
     magetool register block
 
 This will update the configuration file the same way magetool create
-block does.
+block does but will not actually create any new files.
 
 
 Specifying a superclass

@@ -41,6 +41,7 @@ The following commands are supported:
     block
     controller
     helper
+    layout
     model
     module
 
@@ -68,17 +69,19 @@ See 'magetool help COMMAND' for more information on a specific command."""
     try:
         exec module_import
     except ImportError:
-        parser.error("command %s not implemented" % module)
+        sys.stderr.write("command %s not implemented" % module)
+        return -1
 
     if method == "help":
         getattr(cls, "help")()
         return
 
     obj = cls(**kwargs)
-    # try:
-    getattr(obj, method)(*args[2:])
-    # except AttributeError:
-    #     parser.error("action %s not implemented" % module)
+    try:
+        getattr(obj, method)(*args[2:])
+    except AttributeError:
+        sys.stderr.write("action %s not implemented" % module)
+        return -1
 
 if __name__ == "__main__":
     main()
