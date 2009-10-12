@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name="magetool",
-      version="0.1.3",
+      version="0.1.4",
       description="CLI tool to automate repetitive tasks in Mage development.",
       author="Jacob Kragh",
       author_email="jhckragh@gmail.com",
