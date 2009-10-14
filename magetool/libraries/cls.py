@@ -4,6 +4,7 @@ from string import Template
 
 class Class(Command):
     """Base class for Mage classes, e.g., blocks, controllers, and models."""
+
     def _fill_template(self, name, superclass):
         """Fill out the template file for a class.
 

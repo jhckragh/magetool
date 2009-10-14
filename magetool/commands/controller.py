@@ -143,7 +143,6 @@ class Controller(Class):
 
     @staticmethod
     def help():
-        """Print a help message describing this command."""
         print """Usage: magetool [OPTION]... (create|register) controller NAME
 
 Options:

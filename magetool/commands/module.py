@@ -37,7 +37,6 @@ class Module:
         self._create_regfile()
 
     def _create_config(self):
-        """Create a configuration file for the module."""
         template = Template(config_xml)
         template = template.substitute(namespace=self.namespace,
                                        module_name=self.name)
@@ -63,7 +62,6 @@ class Module:
 
     @staticmethod
     def help():
-        """Print a help message describing this command."""
         print """Usage: magetool create module NAME
 
 Example:

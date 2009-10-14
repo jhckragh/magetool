@@ -36,7 +36,7 @@ To run Magetool you need to have the following software installed:
  * Python 2.6
  * lxml[3]
 
-On Ubuntu Linux you can install these dependencies through apt:
+On Ubuntu you can install these dependencies through apt:
 
     sudo apt-get install python2.6 python-lxml
 
@@ -78,9 +78,8 @@ this manually, see the community forum[4].)
 ## Legal ##
 
 Magento is a trademark of Irubin Consulting Inc. Python is a trademark
-or registered trademark of the Python Software Foundation. Linux is a
-registered trademark of Linus Torvalds. Ubuntu is a registered
-trademark of Canonical Ltd.
+or registered trademark of the Python Software Foundation. Ubuntu is a
+registered trademark of Canonical Ltd.
 
 Magetool is not in any way affiliated with or endorsed by any of these
 trademark owners.

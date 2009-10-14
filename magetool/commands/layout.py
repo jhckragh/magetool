@@ -6,7 +6,6 @@ class Layout(Command):
     """Class representing a Mage layout."""
 
     def _format_name(self, name):
-        """Add file type suffix to name if it doesn't already have one."""
         if not name.endswith(".xml"):
             name = name + ".xml"
         return name
@@ -49,7 +48,6 @@ class Layout(Command):
 
     @staticmethod
     def help():
-        """Print a help message describing this command."""
         print """Usage: magetool (create|register) layout NAME
 
 Examples:

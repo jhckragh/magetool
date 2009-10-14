@@ -5,11 +5,6 @@ class Command:
     """Base class for magetool commands."""
 
     def __init__(self):
-        """Initialize the class by figuring out what kind of class it is
-        and by retrieving the class's template as well as information about
-        the module to which the class belongs.
-
-        """
         self.type = self.__class__.__name__.lower()
         self.template = self._get_template()
         self.module = Module()
