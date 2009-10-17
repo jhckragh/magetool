@@ -78,8 +78,8 @@ class GlobalClass(Class):
         """
         tag = self.module.name.lower()
         if not self.config.xpath(self.xpath + "/" + tag):
-            module = etree.SubElement(self.type_elem, self.module.name.lower())
-            class_ = etree.SubElement(module, "class")
+            group = etree.SubElement(self.type_elem, self.module.name.lower())
+            class_ = etree.SubElement(group, "class")
             class_.text = "%s_%s_%s" % (self.module.namespace,
                                         self.module.name,
                                         self.type.capitalize())

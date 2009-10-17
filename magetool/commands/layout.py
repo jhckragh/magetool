@@ -39,10 +39,10 @@ class Layout(Command):
         # Only update the file if the following element doesn't exist.
         # This way we avoid inadvertently creating duplicate layout
         # updates.
-        module_lower = updates.find(self.module.name.lower())
-        if module_lower is None:
-            module_lower = etree.SubElement(updates, self.module.name.lower())
-            file_ = etree.SubElement(module_lower, "file")
+        group = updates.find(self.module.name.lower())
+        if group is None:
+            group = etree.SubElement(updates, self.module.name.lower())
+            file_ = etree.SubElement(group, "file")
             file_.text = name
             self.put_config(config)
 

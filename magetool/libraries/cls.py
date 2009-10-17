@@ -9,6 +9,9 @@ class Class(Command):
         """Fill out the template file for a class.
 
         Args:
+            name: The part of the class name which follows
+                  the base name, e.g., "Abstract" or
+                  "Customer_Recent".
             superclass: The full name of the superclass, e.g.,
                         "Mage_Core_Block_Template".
 

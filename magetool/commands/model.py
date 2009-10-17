@@ -1,10 +1,22 @@
 from magetool.libraries.globalclass import GlobalClass
+from string import Template
 
 class Model(GlobalClass):
     """Class which represents Mage models, i.e., PHP classes which go in
     a module's Model/ directory.
 
     """
+    def _fill_template(self, name, superclass):
+        """See _fill_template in magetool.libraries.cls."""
+        template = Template(self.template)
+        template = template.substitute(namespace=self.module.namespace,
+                                       module_name=self.module.name,
+                                       name=name,
+                                       superclass=superclass,
+                                       group=self.module.name.lower(),
+                                       name_lower=name.lower())
+        return template
+
     @staticmethod
     def help():
         print """Usage: magetool [OPTION]... (create|register) model [NAME]

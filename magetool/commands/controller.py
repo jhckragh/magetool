@@ -67,10 +67,10 @@ class Controller(Class):
         routers = elem.find("routers")
         if routers is None:
             routers = etree.SubElement(elem, "routers")
-        module_lower = etree.SubElement(routers, self.module.name.lower())
-        use = etree.SubElement(module_lower, "use")
+        group = etree.SubElement(routers, self.module.name.lower())
+        use = etree.SubElement(group, "use")
         use.text = self.router
-        args = etree.SubElement(module_lower, "args")
+        args = etree.SubElement(group, "args")
         module = etree.SubElement(args, "module")
         module.text = "%s_%s" % (self.module.namespace, self.module.name)
         front_name = etree.SubElement(args, "frontName")
@@ -106,9 +106,9 @@ class Controller(Class):
         super_module = etree.SubElement(routers, super_module)
         args = etree.SubElement(super_module, "args")
         modules = etree.SubElement(args, "modules")
-        module_lower = etree.SubElement(modules, self.module.name.lower())
-        module_lower.set("before", super_prefix)
-        module_lower.text = "_".join((self.module.namespace, self.module.name))
+        group = etree.SubElement(modules, self.module.name.lower())
+        group.set("before", super_prefix)
+        group.text = "_".join((self.module.namespace, self.module.name))
         return elem
 
     def create(self, name):
