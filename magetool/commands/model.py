@@ -9,15 +9,21 @@ class Model(GlobalClass):
     a module's Model/ directory.
 
     """
+    def __init__(self, superclass=None, override=False, table=None):
+        GlobalClass.__init__(self, superclass, override)
+        self.table = table
+
     def _fill_template(self, name, superclass):
         """See _fill_template in magetool.libraries.cls."""
+        end = name.lower().split("_")[-1]
         template = Template(self.template)
         template = template.substitute(namespace=self.module.namespace,
                                        module_name=self.module.name,
                                        name=name,
                                        superclass=superclass,
                                        group=self.module.name.lower(),
-                                       name_lower=name.lower().strip("mysql4_"))
+                                       name_lower=name.lower(),
+                                       end=end)
         return template
 
     def _register_resource(self, name):
@@ -34,16 +40,21 @@ class Model(GlobalClass):
                                            self.module.name,
                                            self.type)
         entities = find_or_create(group_mysql4, "entities")
-        name_lower = find_or_create(entities, name.lower().strip("mysql4_"))
+        name_lower = find_or_create(entities, name.lower())
         table = find_or_create(name_lower, "table")
-        table.text = self.module.name.lower() + "_" + name_lower.tag
+        if self.table is None:
+            table.text = self.module.name.lower() + "_" + name_lower.tag
+        else:
+            table.text = self.table
 
     def create(self, name):
         """Create the model and its resource."""
         self._register_resource(name)
         GlobalClass.create(self, name)
         self.template = resource_template
-        name = "Mysql4_" + name
+        name = "Mysql4_" + name # We prepend this string so _create_class()
+                                # will create a directory called "Mysql4"
+                                # in the Model/ directory.
         self._create_class(name, "Mage_Core_Model_Mysql4_Abstract")
 
     @staticmethod

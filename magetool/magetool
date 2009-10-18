@@ -27,6 +27,7 @@ See 'magetool help COMMAND' for more information on a specific command."""
     parser.add_option("-o", "--override", action="store_true", dest="override")
     parser.add_option("-s", "--superclass", dest="superclass")
     parser.add_option("-r", "--router", dest="router")
+    parser.add_option("-t", "--table", dest="table")
 
     options, args = parser.parse_args()
     if options.show_help:
