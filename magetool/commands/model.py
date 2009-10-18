@@ -1,4 +1,7 @@
+from lxml import etree
 from magetool.libraries.globalclass import GlobalClass
+from magetool.libraries.util import find_or_create
+from magetool.templates.resource import string as resource_template
 from string import Template
 
 class Model(GlobalClass):
@@ -14,8 +17,34 @@ class Model(GlobalClass):
                                        name=name,
                                        superclass=superclass,
                                        group=self.module.name.lower(),
-                                       name_lower=name.lower())
+                                       name_lower=name.lower().strip("mysql4_"))
         return template
+
+    def _register_resource(self, name):
+        """Tell Mage that the module has one or more resource models."""
+        GlobalClass.register(self)
+        tag = self.module.name.lower()
+        group = self.config.xpath(self.xpath + "/" + tag)[0]
+        group_mysql4 = group.tag + "_mysql4"
+        resource_model = find_or_create(group, "resourceModel")
+        resource_model.text = group_mysql4
+        group_mysql4 = find_or_create(group, group_mysql4)
+        class_ = find_or_create(group_mysql4, "class")
+        class_.text = "%s_%s_%s_Mysql4" % (self.module.namespace,
+                                           self.module.name,
+                                           self.type)
+        entities = find_or_create(group_mysql4, "entities")
+        name_lower = find_or_create(entities, name.lower().strip("mysql4_"))
+        table = find_or_create(name_lower, "table")
+        table.text = self.module.name.lower() + "_" + name_lower.tag
+
+    def create(self, name):
+        """Create the model and its resource."""
+        self._register_resource(name)
+        GlobalClass.create(self, name)
+        self.template = resource_template
+        name = "Mysql4_" + name
+        self._create_class(name, "Mage_Core_Model_Mysql4_Abstract")
 
     @staticmethod
     def help():
