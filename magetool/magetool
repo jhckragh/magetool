@@ -24,6 +24,7 @@ See 'magetool help COMMAND' for more information on a specific command."""
     parser = OptionParser(usage=usage, version=version, add_help_option=False)
     parser.add_option("-f", "--frontname", dest="front_name")
     parser.add_option("-h", "--help", action="store_true", dest="show_help")
+    parser.add_option("-i", "--id-field-name", dest="id_field_name")
     parser.add_option("-o", "--override", action="store_true", dest="override")
     parser.add_option("-s", "--superclass", dest="superclass")
     parser.add_option("-r", "--router", dest="router")

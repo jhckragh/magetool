@@ -1,8 +1,8 @@
 Magetool documentation
 ======================
 
-Creating a module
------------------
+Creating modules
+----------------
 
 To create a new module called NewProduct, navigate to a namespace
 directory (e.g., ~/public_html/magento/app/code/local/Company/)
@@ -27,8 +27,8 @@ in ../../../etc/modules/. (In the example case the file will be
 called Company_NewProduct.xml.)
 
 
-Creating a controller
----------------------
+Creating controllers
+--------------------
 
 To create an IndexController in a module, navigate to the module's
 directory (e.g., ~/public_html/magento/app/code/local/Company/NewProduct/)
@@ -68,8 +68,8 @@ This will do two things:
         ...
 
 
-Creating a block, a helper, or a model
---------------------------------------
+Creating blocks, helpers, and models
+------------------------------------
 
 To create a block called ProductViewCase in a module, navigate to the
 module's directory and run Magetool like this:
@@ -79,10 +79,11 @@ module's directory and run Magetool like this:
 (To create a helper or a model with the same name, replace block with
 either helper or model, respectively.)
       
-This will not only define a skeleton PHP class in
-Block/ProductViewCase.php; it will also update the module's
-configuration file to tell Mage that the module has one or more Block
-classes:
+This will Do The Right Thing. In the case of blocks and helpers, it
+will define a skeleton PHP class in Block/ProductViewCase.php or
+Helper/ProductViewCase.php. In addition, it will update the module's
+configuration file to tell Mage that the module has one or more
+Block/Helper classes, e.g.:
 
     ...
     <global>
@@ -96,12 +97,37 @@ classes:
     </global>
     ...
 
+In the case of models the above invocation will define a PHP clas in
+Model/ProductViewCase.php. Also, it will create a resource model at
+Model/Mysql4/ProductViewCase.php and update the module's configuration
+file accordingly.
 
-Creating a layout file
-----------------------
+
+Note on creating models
+-----------------------
+
+The syntax for creating models is the same as that for creating blocks
+and helpers. However, as creating and registering a model is more
+complex than creating and registering a block or a helper, the model
+command supports two options for customizing how it is done:
+
+ * -t or --table: This option allows you to specify which table the
+                      model's entity corresponds to.
+
+ * -i or --id-field-name: This option allows you to specify which
+                              column in the table uniquely identifies
+			      rows in the table.
+
+Note that these are *options*: you don't have to use them. Magetool
+provides sane defaults for both options.
+
+
+Creating layout files
+---------------------
 
 To create a layout file called newproduct.xml in
-app/design/frontend/default/default/, run Magetool like this:
+app/design/frontend/default/default/, run Magetool like this from a
+module directory (not from within app/design/frontend/default/default/):
 
     magetool create layout newproduct
 
@@ -121,7 +147,7 @@ This will update the configuration file the same way magetool create
 block does but will not actually create any new files.
 
 
-Specifying a superclass
+Specifying superclasses
 -----------------------
 
 Normally when you use the create action, Magetool defines the created
@@ -141,7 +167,7 @@ This will define a PHP class in Helper/Data.php which extends
 Mage_Catalog_Helper_Image.
 
 
-Overriding a class
+Overriding classes
 ------------------
 
 To tell Mage that a created class should override its superclass, use
