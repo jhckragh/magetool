@@ -1,0 +1,3 @@
+These people have unwittingly contributed to Magetool: Alan Storm,
+Branko Ajzele, and Mark Kimsal. Without their selfless knowledge
+sharing Magetool would not have been possible.
