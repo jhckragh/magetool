@@ -1,5 +1,7 @@
 import os.path
+
 from lxml import etree
+
 from magetool.libraries.command import Command
 
 class Layout(Command):

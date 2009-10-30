@@ -1,9 +1,11 @@
-import os, re
+import os
+import re
+from string import Template
+from xml.dom.minidom import parseString
+
 import magetool.settings as settings
 from magetool.templates.config_xml import config_xml
 from magetool.templates.regfile import regfile
-from string import Template
-from xml.dom.minidom import parseString
 
 class Module:
     def __init__(self):

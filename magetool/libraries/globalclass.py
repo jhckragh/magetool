@@ -1,4 +1,5 @@
 from lxml import etree
+
 from magetool.libraries.cls import Class
 from magetool.libraries.util import find_or_create
 

@@ -1,8 +1,10 @@
+from string import Template
+
 from lxml import etree
+
 from magetool.libraries.globalclass import GlobalClass
 from magetool.libraries.util import find_or_create
 from magetool.templates.resource import string as resource_template
-from string import Template
 
 class Model(GlobalClass):
     """Class which represents Mage models, i.e., PHP classes which go in

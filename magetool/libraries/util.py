@@ -1,4 +1,6 @@
-import os.path, sys
+import os.path
+import sys
+
 from lxml import etree
 
 def get_prog():

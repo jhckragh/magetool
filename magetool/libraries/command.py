@@ -1,4 +1,5 @@
 from lxml import etree
+
 from magetool.commands.module import Module
 
 class Command:
