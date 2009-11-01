@@ -70,7 +70,6 @@ class GlobalClass(Class):
             self._override()
         else:
             self.register()
-        self.put_config(self.config)
 
     def register(self):
         """Tell Mage that the module has one or more self.type global
@@ -84,6 +83,7 @@ class GlobalClass(Class):
             class_.text = "%s_%s_%s" % (self.module.namespace,
                                         self.module.name,
                                         self.type.capitalize())
+            self.put_config(self.config)
 
     def _override(self):
         """Tell Mage that this global class overrides self.superclass."""
@@ -99,3 +99,4 @@ class GlobalClass(Class):
                                          self.module.name,
                                          self.type.capitalize(),
                                          self.name)
+            self.put_config(self.config)
