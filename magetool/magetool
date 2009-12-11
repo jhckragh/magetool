@@ -6,7 +6,7 @@ __version__ = "0.1.5"
 
 import sys
 from optparse import OptionParser
-from magetool.libraries.util import get_prog
+from magetool.libraries.util import error
 
 def main():
     usage = """Usage: magetool [OPTION]... ACTION COMMAND ARG
@@ -45,9 +45,7 @@ See 'magetool help COMMAND' for more information on a specific command."""
     try:
         exec module_import
     except ImportError:
-        msg = "%s: error: command '%s' not implemented\n" % (get_prog(), module)
-        sys.stderr.write(msg)
-        sys.exit(2)
+        error("command '%s' not implemented" % (module,))
 
     if method == "help":
         getattr(cls, "help")()
@@ -57,9 +55,7 @@ See 'magetool help COMMAND' for more information on a specific command."""
     try:
         getattr(obj, method)(*args[2:])
     except AttributeError:
-        msg = "%s: error: action '%s' not implemented\n" % (get_prog(), method)
-        sys.stderr.write(msg)
-        sys.exit(2)
+        error("action '%s' not implemented" % (method,))
 
 if __name__ == "__main__":
     main()

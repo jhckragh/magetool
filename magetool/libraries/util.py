@@ -11,3 +11,7 @@ def find_or_create(parent, elem):
     if res is None:
         res = etree.SubElement(parent, elem)
     return res
+
+def error(msg, status=2):
+    sys.stderr.write("%s: error: %s\n" % (get_prog(), msg))
+    sys.exit(status)
