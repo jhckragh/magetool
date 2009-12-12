@@ -1,5 +1,6 @@
 import os.path
 import sys
+from textwrap import fill
 
 from lxml import etree
 
@@ -12,6 +13,12 @@ def find_or_create(parent, elem):
         res = etree.SubElement(parent, elem)
     return res
 
+def _err(msg, type):
+    sys.stderr.write(fill("%s: %s: %s" % (get_prog(), type, msg)) + "\n")
+
 def error(msg, status=2):
-    sys.stderr.write("%s: error: %s\n" % (get_prog(), msg))
+    _err(msg, "error")
     sys.exit(status)
+
+def warn(msg):
+    _err(msg, "warning")

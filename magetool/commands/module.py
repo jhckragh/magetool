@@ -4,8 +4,14 @@ from string import Template
 from xml.dom.minidom import parseString
 
 import magetool.settings as settings
+from magetool.libraries.util import warn
 from magetool.templates.config_xml import config_xml
 from magetool.templates.regfile import regfile
+
+NAME_CASE_WARNING =  ("Internal Mage methods expect namespaces " +
+                      "and module names to be capitalized. " +
+                      "Violating this convention will prevent " +
+                      "Mage from loading the module.")
 
 class Module:
     def __init__(self):
@@ -23,6 +29,11 @@ class Module:
             self.name = match.group(3)
             self.path = cwd[:match.end()]
             self.cfg_path = self.path + "/etc/config.xml".replace("/", os.sep)
+
+            if not self.namespace[0].isupper():
+                warn(NAME_CASE_WARNING)
+            if not self.name is None and not self.name[0].isupper():
+                warn(NAME_CASE_WARNING)
         except AttributeError:
             raise EnvironmentError("Wrong execution directory.")
 
@@ -31,6 +42,8 @@ class Module:
         module, using the name parameter as the module's name.
 
         """
+        if not name[0].isupper():
+            warn(NAME_CASE_WARNING)
         self.name = name
         os.mkdir(self.name)
         for directory in settings.directories:
