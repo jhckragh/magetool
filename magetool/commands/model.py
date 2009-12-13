@@ -49,6 +49,7 @@ class Model(GlobalClass):
         name_lower = find_or_create(entities, name.lower())
         table = find_or_create(name_lower, "table")
         table.text = self.table or group.tag + "_" + name_lower.tag
+        self.put_config(self.config)
 
     def create(self, name):
         """Create the model and its resource."""
