@@ -50,8 +50,7 @@ class GlobalClass(Class):
         them.
 
         """
-        global_ = find_or_create(self.config, "global")
-        type_ = find_or_create(global_, self.type_tag)
+        find_or_create(find_or_create(self.config, "global"), self.type_tag)
 
     def create(self, name):
         """Create the global class.
