@@ -3,6 +3,7 @@ import os.path
 from lxml import etree
 
 from magetool.libraries.command import Command
+from magetool.libraries.util import find_or_create
 
 class Layout(Command):
     """Class representing a Mage layout."""
@@ -28,16 +29,9 @@ class Layout(Command):
 
     def register(self, name):
         """Make Mage aware that the module supplies a layout file."""
-        name = self._format_name(name)
         config = self.get_config()
-        # Make sure a <frontend> element exists.
-        frontend = config.find("frontend")
-        if frontend is None:
-            frontend = etree.SubElement(config, "frontend")
-        # Make sure an <updates> element exists.
-        updates = frontend.find("updates")
-        if updates is None:
-            updates = etree.SubElement(frontend, "updates")
+        frontend = find_or_create(config, "frontend")
+        updates = find_or_create(frontend, "updates")
         # Only update the file if the following element doesn't exist.
         # This way we avoid inadvertently creating duplicate layout
         # updates.
@@ -45,7 +39,7 @@ class Layout(Command):
         if group is None:
             group = etree.SubElement(updates, self.module.name.lower())
             file_ = etree.SubElement(group, "file")
-            file_.text = name
+            file_.text = self._format_name(name)
             self.put_config(config)
 
     @staticmethod

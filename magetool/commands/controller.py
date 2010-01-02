@@ -1,6 +1,7 @@
 from lxml import etree
 
 from magetool.libraries.cls import Class
+from magetool.libraries.util import find_or_create
 
 class Controller(Class):
     """Class representing Mage controllers, i.e., PHP classes which go
@@ -46,8 +47,7 @@ class Controller(Class):
             name = name[:-len(suffix)]
         substrings = name.split("_")
         substrings[-1] = substrings[-1].capitalize() + "Controller"
-        name = "_".join(substrings)
-        return name
+        return "_".join(substrings)
 
     def _add_route(self, elem):
         """Add a <routers> element with associated sub elements to elem.
@@ -60,14 +60,12 @@ class Controller(Class):
             An lxml.etree._Element object.
 
         """
-        xpath = "/config/%s/routers/%s"
-        route = elem.xpath(xpath % (elem.tag, self.module.name.lower()))
+        route = elem.xpath("/config/%s/routers/%s"
+                           % (elem.tag, self.module.name.lower()))
         if route:
             return # Bail (assume that a route already exists).
 
-        routers = elem.find("routers")
-        if routers is None:
-            routers = etree.SubElement(elem, "routers")
+        routers = find_or_create(elem, "routers")
         group = etree.SubElement(routers, self.module.name.lower())
         use = etree.SubElement(group, "use")
         use.text = self.router
@@ -97,10 +95,7 @@ class Controller(Class):
         super_module = substrings[1].lower()
         super_prefix = "_".join(substrings[:2])
 
-        routers = elem.find("routers")
-        if routers is None:
-            routers = etree.SubElement(elem, "routers")
-
+        routers = find_or_create(elem, "routers")
         if routers.find(super_module) is not None:
             return # Bail (assume that an override already exists).
 
@@ -119,8 +114,7 @@ class Controller(Class):
         update the module's configuration file.
 
         """
-        name = self._format_name(name)
-        self._create_class(name, self.superclass)
+        self._create_class(self._format_name(name), self.superclass)
         self.register()
 
     def register(self):
@@ -132,9 +126,7 @@ class Controller(Class):
 
         """
         config = self.get_config()
-        frontend = config.find("frontend")
-        if frontend is None:
-            frontend = etree.SubElement(config, "frontend")
+        frontend = find_or_create(config, "frontend")
         # Now we're sure frontend exists, so we can add sub elements to it.
         if self.override:
             frontend = self._add_override(frontend)

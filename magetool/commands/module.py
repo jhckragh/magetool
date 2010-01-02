@@ -39,7 +39,7 @@ class Module:
 
     def create(self, name):
         """Create a directory structure and a configuration file for the
-        module, using the name parameter as the module's name.
+        module using the name parameter as the module's name.
 
         """
         if not name[0].isupper():
@@ -52,9 +52,8 @@ class Module:
         self._create_regfile()
 
     def _create_config(self):
-        template = Template(config_xml)
-        template = template.substitute(namespace=self.namespace,
-                                       module_name=self.name)
+        template = Template(config_xml).substitute(namespace=self.namespace,
+                                                   module_name=self.name)
         parseString(template) # Syntax check
         dest = open("%s/etc/config.xml" % self.name, "w")
         dest.write(template)
@@ -65,10 +64,9 @@ class Module:
         Mage scan the module's etc/ directory.
 
         """
-        template = Template(regfile)
-        template = template.substitute(namespace=self.namespace,
-                                       module_name=self.name,
-                                       code_pool=self.code_pool)
+        template = Template(regfile).substitute(namespace=self.namespace,
+                                                module_name=self.name,
+                                                code_pool=self.code_pool)
         parseString(template) # Syntax check
         dest = open("../../../etc/modules/%s_%s.xml" % (self.namespace,
                                                         self.name), "w")
