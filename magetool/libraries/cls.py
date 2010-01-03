@@ -1,4 +1,5 @@
 import os
+
 from magetool.libraries.command import Command
 from string import Template
 
@@ -29,25 +30,30 @@ class Class(Command):
 
     def _create_class(self, name, superclass):
         """Create a skeleton PHP class."""
-        template = self._fill_template(name, superclass)
+        dest = self._prepare_path_to(name)
+        if os.path.isfile(dest):
+            raise OSError("File exists: " + dest)
+        dest = open(dest, "w")
+        dest.write(self._fill_template(name.split("_")[-1], superclass))
+        dest.close()
+
+    def _prepare_path_to(self, name):
         directory = ("controllers" if self.type == "controller" else
                      self.type.capitalize())
+        base = os.path.join(self.module.path, directory)
+        dirname = self._words_to_dirs(base, name)
+        self._create_missing_dirs(dirname)
+        return os.path.join(dirname, name.split("_")[-1] + ".php")
 
-        path = self.module.path + os.sep + directory + os.sep
-        # Check if the class name contains underscores. If it does, interpret
-        # them as directory separators.
-        if not name.find("_") == -1:
-            substrings = name.split("_")
-            path += os.path.join(*substrings[:-1]) + os.sep
-            try:
-                os.makedirs(path)
-            except OSError:
-                pass # The directories already exist
-            name = substrings[-1]
-        dest = path + name + ".php"
-        if not os.path.isfile(dest):
-            dest = open(dest, "w")
-            dest.write(template)
-            dest.close()
-        else:
-            raise OSError("File exists: " + dest)
+    def _words_to_dirs(self, path, name):
+        """Convert underscore-delimited string to a path."""
+        words = name.split("_")
+        if len(words) > 1:
+            path = os.path.join(path, *words[:-1])
+        return path
+
+    def _create_missing_dirs(self, path):
+        try:
+            os.makedirs(path)
+        except OSError:
+            pass # The directories already exist
