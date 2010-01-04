@@ -22,7 +22,7 @@ class Module:
         cwd = os.getcwd()
         code_pools = "|".join(settings.code_pools)
         pattern = "/app/code/(%s)/([A-Za-z]+)/?([A-Za-z]+)?" % code_pools
-        match = re.search(pattern, cwd)
+        match = re.search(pattern.replace("/", os.sep), cwd)
         try:
             self.code_pool = match.group(1)
             self.namespace = match.group(2)
@@ -48,7 +48,7 @@ class Module:
         self.name = name
         os.mkdir(self.name)
         for directory in settings.directories:
-            os.mkdir("%s/%s" % (self.name, directory))
+            os.mkdir(os.path.join(self.name, directory))
         self._create_config()
         self._create_regfile()
 
@@ -56,7 +56,7 @@ class Module:
         template = Template(config_xml).substitute(namespace=self.namespace,
                                                    module_name=self.name)
         parseString(template) # Syntax check
-        dest = open("%s/etc/config.xml" % self.name, "w")
+        dest = open(os.path.join(self.name, "etc", "config.xml"), "w")
         dest.write(template)
         dest.close()
 
@@ -69,8 +69,9 @@ class Module:
                                                 module_name=self.name,
                                                 code_pool=self.code_pool)
         parseString(template) # Syntax check
-        dest = open("../../../etc/modules/%s_%s.xml" % (self.namespace,
-                                                        self.name), "w")
+        path = os.path.join("..", "..", "..", "etc", "modules",
+                            "%s_%s.xml" % (self.namespace, self.name))
+        dest = open(path, "w")
         dest.write(template)
         dest.close()
 
