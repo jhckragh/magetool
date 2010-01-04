@@ -3,13 +3,13 @@ import unittest
 
 from magetool.libraries.cls import Class
 
-MODULE_DIR = os.path.abspath("../app/code/local/Foo/Bar")
+TEST_DIR = os.path.abspath(os.path.join("..", "app", "code", "local", "Foo", "Bar"))
 
 class ClsTest(unittest.TestCase):
 
     def setUp(self):
         self.cwd = os.getcwd()
-        os.chdir(MODULE_DIR)
+        os.chdir(TEST_DIR)
         os.mkdir("Class")
         self.cls = Class()
 
@@ -19,7 +19,7 @@ class ClsTest(unittest.TestCase):
         del self.cls
 
     def test__fill_template(self):
-        self.failUnlessEqual(self.cls._fill_template("Hello", "World"),
+        self.assertEqual(self.cls._fill_template("Hello", "World"),
                              "Foo|Bar|Hello|World")
 
     def test__create_class1(self):
@@ -30,7 +30,7 @@ class ClsTest(unittest.TestCase):
         with open(target) as class_file:
             for line in class_file:
                 class_string += line
-        self.failUnlessEqual(class_string, "Foo|Bar|" + name + "|World")
+        self.assertEqual(class_string, "Foo|Bar|" + name + "|World")
         os.remove(target)
 
     def test__create_class2(self):
@@ -41,21 +41,21 @@ class ClsTest(unittest.TestCase):
         with open(target) as class_file:
             for line in class_file:
                 class_string += line
-        self.failUnlessEqual(class_string, "Foo|Bar|Quux_Qux|World")
+        self.assertEqual(class_string, "Foo|Bar|Quux_Qux|World")
         os.remove(target)
         os.rmdir(target[:target.rfind(os.sep)])
 
     def test__words_to_dirs1(self):
-        self.failUnlessEqual(self.cls._words_to_dirs(MODULE_DIR, "Product"),
-                             MODULE_DIR)
+        self.assertEqual(self.cls._words_to_dirs(TEST_DIR, "Product"),
+                             TEST_DIR)
 
     def test__words_to_dirs2(self):
-        self.failUnlessEqual(self.cls._words_to_dirs(MODULE_DIR, "Abc_Def"),
-                             os.path.join(MODULE_DIR, "Abc"))
+        self.assertEqual(self.cls._words_to_dirs(TEST_DIR, "Abc_Def"),
+                             os.path.join(TEST_DIR, "Abc"))
 
     def test__words_to_dirs3(self):
-        self.failUnlessEqual(self.cls._words_to_dirs(MODULE_DIR, "Abc_Def_Ghi"),
-                             os.path.join(MODULE_DIR, "Abc", "Def"))
+        self.assertEqual(self.cls._words_to_dirs(TEST_DIR, "Abc_Def_Ghi"),
+                             os.path.join(TEST_DIR, "Abc", "Def"))
 
     def test__create_missing_dirs1(self):
         self.cls._create_missing_dirs(os.path.join("abc", "def", "ghi"))
@@ -71,8 +71,8 @@ class ClsTest(unittest.TestCase):
         os.rmdir("abc")
 
     def test__prepare_path_to(self):
-        self.failUnlessEqual(self.cls._prepare_path_to("Product"),
-                             os.path.join(MODULE_DIR, "Class", "Product.php"))
+        self.assertEqual(self.cls._prepare_path_to("Product"),
+                             os.path.join(TEST_DIR, "Class", "Product.php"))
 
 if __name__ == "__main__":
     unittest.main()

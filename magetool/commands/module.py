@@ -8,10 +8,10 @@ from magetool.libraries.util import warn
 from magetool.templates.config_xml import config_xml
 from magetool.templates.regfile import regfile
 
-NAME_CASE_WARNING =  ("Internal Mage methods expect namespaces " +
-                      "and module names to be capitalized. " +
-                      "Violating this convention will prevent " +
-                      "Mage from loading the module.")
+NAME_CASE_WARNING = ("Internal Mage methods expect namespaces " +
+                     "and module names to be capitalized. " +
+                     "Violating this convention will prevent " +
+                     "Mage from loading the module.")
 
 class Module:
     def __init__(self):
@@ -38,8 +38,9 @@ class Module:
             raise EnvironmentError("Wrong execution directory.")
 
     def create(self, name):
-        """Create a directory structure and a configuration file for the
-        module using the name parameter as the module's name.
+        """Create a directory structure, a configuration file, and an
+        activation file for the module, using the name parameter as the
+        module's name.
 
         """
         if not name[0].isupper():

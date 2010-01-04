@@ -38,7 +38,7 @@ class Class(Command):
         dest.close()
 
     def _prepare_path_to(self, name):
-        """Return the path to where name should reside on the file system."""
+        """Return the path to where on the file system name should reside."""
         directory = ("controllers" if self.type == "controller" else
                      self.type.capitalize())
         base = os.path.join(self.module.path, directory)
