@@ -105,6 +105,17 @@ class BlockTest(unittest.TestCase):
             self.assertEqual(reference_override_config, config.read())
         os.remove(os.path.join("Block", "List.php"))
 
+    def test_register(self):
+        self.block.register()
+        with open(os.path.join("etc", "config.xml")) as config:
+            self.assertEqual(reference_config, config.read())
+
+    def test_register_twice(self):
+        self.block.register()
+        self.block.register()
+        with open(os.path.join("etc", "config.xml")) as config:
+            self.assertEqual(reference_config, config.read())
+
     def _get_reference_class(self, name, superclass="Mage_Core_Block_Template"):
         return """<?php
 
