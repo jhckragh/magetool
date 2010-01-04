@@ -27,6 +27,7 @@ class Command:
 
         """
         dest = open(self.module.cfg_path, "w")
+        dest.write('<?xml version="1.0"?>\n')
         dest.write(etree.tostring(elem, pretty_print=True))
         dest.close()
 
