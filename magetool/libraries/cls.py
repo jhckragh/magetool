@@ -34,10 +34,11 @@ class Class(Command):
         if os.path.isfile(dest):
             raise OSError("File exists: " + dest)
         dest = open(dest, "w")
-        dest.write(self._fill_template(name.split("_")[-1], superclass))
+        dest.write(self._fill_template(name, superclass))
         dest.close()
 
     def _prepare_path_to(self, name):
+        """Return the path to where name should reside on the file system."""
         directory = ("controllers" if self.type == "controller" else
                      self.type.capitalize())
         base = os.path.join(self.module.path, directory)

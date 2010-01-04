@@ -3,7 +3,7 @@ import unittest
 
 from magetool.libraries.cls import Class
 
-MODULE_DIR = "/home/webdev/mage1324/app/code/local/Foo/Bar"
+MODULE_DIR = os.path.abspath("../app/code/local/Foo/Bar")
 
 class ClsTest(unittest.TestCase):
 
@@ -41,7 +41,7 @@ class ClsTest(unittest.TestCase):
         with open(target) as class_file:
             for line in class_file:
                 class_string += line
-        self.failUnlessEqual(class_string, "Foo|Bar|Qux|World")
+        self.failUnlessEqual(class_string, "Foo|Bar|Quux_Qux|World")
         os.remove(target)
         os.rmdir(target[:target.rfind(os.sep)])
 
