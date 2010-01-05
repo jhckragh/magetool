@@ -31,7 +31,8 @@ class Layout(Command):
         """Make Mage aware that the module supplies a layout file."""
         config = self.get_config()
         frontend = find_or_create(config, "frontend")
-        updates = find_or_create(frontend, "updates")
+        layout = find_or_create(frontend, "layout")
+        updates = find_or_create(layout, "updates")
         # Only update the file if the following element doesn't exist.
         # This way we avoid inadvertently creating duplicate layout
         # updates.

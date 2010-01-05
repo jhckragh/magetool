@@ -1,5 +1,5 @@
 string = """<?xml version="1.0"?>
-<layout>
+<layout version="0.1.0">
 
 </layout>
 """
