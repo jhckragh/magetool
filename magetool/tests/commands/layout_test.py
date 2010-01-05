@@ -72,5 +72,30 @@ class LayoutTest(unittest.TestCase):
         with open(os.path.join("etc", "config.xml")) as config:
             self.assertEqual(CONFIG, config.read())
 
+    def test_create_works_in_depth(self):
+        file_name = "quux.xml"
+        os.chdir("etc")
+        self.layout.create(file_name)
+        os.chdir("..")
+        try:
+            with open(os.path.join(LAYOUT_DIR, file_name)) as layout_file:
+                self.assertEqual(XML, layout_file.read())
+        finally:
+            os.remove(os.path.join(LAYOUT_DIR, file_name))
+        with open(os.path.join("etc", "config.xml")) as config:
+            self.assertEqual(CONFIG, config.read())
+
+
+    def test_register(self):
+        self.layout.register("quux")
+        with open(os.path.join("etc", "config.xml")) as config:
+            self.assertEqual(CONFIG, config.read())
+
+    def test_register_twice(self):
+        self.layout.register("quux")
+        self.layout.register("quux")
+        with open(os.path.join("etc", "config.xml")) as config:
+            self.assertEqual(CONFIG, config.read())
+
 if __name__ == "__main__":
     unittest.main()
