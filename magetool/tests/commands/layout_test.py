@@ -3,9 +3,7 @@ import unittest
 
 from magetool.commands.layout import Layout
 from magetool.commands.module import Module
-from magetool.libraries.util import remove_module
-
-TEST_DIR = os.path.abspath(os.path.join("..", "app", "code", "local", "Foo"))
+from magetool.tests.util import remove_module, TEST_DIR
 
 LAYOUT_DIR = os.path.join("..", "..", "..", "..", "design",
                           "frontend","default", "default", "layout")

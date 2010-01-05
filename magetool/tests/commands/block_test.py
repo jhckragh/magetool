@@ -3,9 +3,7 @@ import unittest
 
 from magetool.commands.block import Block
 from magetool.commands.module import Module
-from magetool.libraries.util import remove_module
-
-TEST_DIR = os.path.abspath(os.path.join("..", "app", "code", "local", "Foo"))
+from magetool.tests.util import remove_module, TEST_DIR
 
 reference_config = """<?xml version="1.0"?>
 <config>

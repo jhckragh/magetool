@@ -2,8 +2,9 @@ import os
 import unittest
 
 from magetool.libraries.cls import Class
+from magetool.tests.util import TEST_DIR
 
-TEST_DIR = os.path.abspath(os.path.join("..", "app", "code", "local", "Foo", "Bar"))
+TEST_DIR = os.path.join(TEST_DIR, "Bar")
 
 class ClsTest(unittest.TestCase):
 
