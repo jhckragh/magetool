@@ -2,6 +2,7 @@ import os
 import unittest
 
 from magetool.commands.module import Module
+from magetool.libraries.util import remove_module
 
 TEST_DIR = os.path.abspath(os.path.join("..", "app", "code", "local", "Foo"))
 
@@ -64,18 +65,11 @@ class ModuleTest(unittest.TestCase):
                  "config": os.path.join("Baz", "etc", "config.xml")}
 
         self.module.create("Baz")
-
         with open(paths["reg_file"]) as actual_reg_file:
             self.assertEqual(reference_reg_file, actual_reg_file.read())
         with open(paths["config"]) as actual_config:
             self.assertEqual(reference_config, actual_config.read())
-
-        os.remove(paths["config"])
-        dirs = ["Block", "controllers", "etc", "Helper", "Model", "sql"]
-        for directory in dirs:
-            os.rmdir(os.path.join("Baz", directory))
-        os.rmdir("Baz")
-        os.remove(paths["reg_file"])
+        remove_module("Foo", "Baz")
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,8 +1,10 @@
-import os.path
+import os
 import sys
 from textwrap import fill
 
 from lxml import etree
+
+import magetool.settings as settings
 
 def get_prog():
     return os.path.basename(sys.argv[0])
@@ -22,3 +24,12 @@ def error(msg, status=2):
 
 def warn(msg):
     _err(msg, "warning")
+
+def remove_module(namespace, name):
+    """Remove a skeleton module and its activation file. (For use in tests.)"""
+    os.remove(os.path.join("..", "..", "..", "etc",
+                           "modules", "%s_%s.xml" % (namespace, name)))
+    os.remove(os.path.join(name, "etc", "config.xml"))
+    for directory in settings.directories:
+        os.rmdir(os.path.join(name, directory))
+    os.rmdir(name)

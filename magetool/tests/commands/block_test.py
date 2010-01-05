@@ -3,6 +3,7 @@ import unittest
 
 from magetool.commands.block import Block
 from magetool.commands.module import Module
+from magetool.libraries.util import remove_module
 
 TEST_DIR = os.path.abspath(os.path.join("..", "app", "code", "local", "Foo"))
 
@@ -53,17 +54,9 @@ class BlockTest(unittest.TestCase):
 
     def tearDown(self):
         os.chdir("..")
-        self._remove_module("Quux")
+        remove_module("Foo", "Quux")
         os.chdir(self.old_cwd)
         del self.block
-
-    def _remove_module(self, name):        
-        os.remove(os.path.join("..", "..", "..", "etc",
-                               "modules", "Foo_Quux.xml"))
-        os.remove(os.path.join(name, "etc", "config.xml"))
-        for dir_ in ["Block", "controllers", "etc", "Helper", "Model", "sql"]:
-            os.rmdir(os.path.join(name, dir_))
-        os.rmdir(name)
 
     def test_create(self):
         self.block.create("Product")
