@@ -21,14 +21,15 @@ class Module:
         """
         cwd = os.getcwd()
         code_pools = "|".join(settings.code_pools)
-        pattern = "/app/code/(%s)/([A-Za-z]+)/?([A-Za-z]+)?" % code_pools
+        pattern = "/(app)/code/(%s)/([A-Za-z]+)/?([A-Za-z]+)?" % code_pools
         match = re.search(pattern.replace("/", os.sep), cwd)
         try:
-            self.code_pool = match.group(1)
-            self.namespace = match.group(2)
-            self.name = match.group(3)
+            self.code_pool = match.group(2)
+            self.namespace = match.group(3)
+            self.name = match.group(4)
             self.path = cwd[:match.end()]
-            self.cfg_path = self.path + "/etc/config.xml".replace("/", os.sep)
+            self.app_path = cwd[:match.end(1)]
+            self.cfg_path = os.path.join(self.path, "etc", "config.xml")
 
             if not self.namespace[0].isupper():
                 warn(NAME_CASE_WARNING)
@@ -69,7 +70,7 @@ class Module:
                                                 module_name=self.name,
                                                 code_pool=self.code_pool)
         parseString(template) # Syntax check
-        path = os.path.join("..", "..", "..", "etc", "modules",
+        path = os.path.join(self.app_path, "etc", "modules",
                             "%s_%s.xml" % (self.namespace, self.name))
         dest = open(path, "w")
         dest.write(template)
