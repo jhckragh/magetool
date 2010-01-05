@@ -19,10 +19,9 @@ class Layout(Command):
 
         """
         name = self._format_name(name)
-        path = os.path.normpath(self.module.path + (".." + os.sep) * 5 +
-                                "design/frontend/default/default/layout")
-        dest = path + os.sep + name
-        dest = open(dest, "w")
+        layout_dir = os.path.join(self.module.app_path, "design", "frontend",
+                                  "default", "default", "layout")
+        dest = open(os.path.join(layout_dir, name), "w")
         dest.write(self.template)
         dest.close()
         self.register(name)
