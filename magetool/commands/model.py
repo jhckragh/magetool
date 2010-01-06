@@ -38,11 +38,11 @@ class Model(GlobalClass):
         group_mysql4 = group.tag + "_mysql4"
         resource_model = find_or_create(group, "resourceModel")
         resource_model.text = group_mysql4
-        group_mysql4 = find_or_create(group, group_mysql4)
+        group_mysql4 = find_or_create(self.type_elem, group_mysql4)
         class_ = find_or_create(group_mysql4, "class")
         class_.text = "%s_%s_%s_Mysql4" % (self.module.namespace,
                                            self.module.name,
-                                           self.type)
+                                           self.type.capitalize())
         entities = find_or_create(group_mysql4, "entities")
         name_lower = find_or_create(entities, name.lower())
         table = find_or_create(name_lower, "table")
