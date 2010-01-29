@@ -30,14 +30,13 @@ See 'magetool help COMMAND' for more information on a specific command."""
     parser.add_option("-r", "--router", dest="router")
     parser.add_option("-t", "--table", dest="table")
 
-    options, args = parser.parse_args()
+    (options, args) = parser.parse_args()
     if options.show_help:
         print usage
         return
     if not len(args) > 1:
         parser.error("incorrect number of arguments")
-    kwargs = dict([(k, v) for k, v in options.__dict__.items()
-                  if not k.startswith("__") and v != None])
+    kwargs = dict([(k, v) for k, v in options.__dict__.items() if v != None])
 
     method, module = [arg.lower() for arg in args[:2]]
     cls = module.capitalize()
