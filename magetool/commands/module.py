@@ -20,9 +20,10 @@ class Module:
 
         """
         cwd = os.getcwd()
-        code_pools = "|".join(settings.code_pools)
-        pattern = "/(app)/code/(%s)/([A-Za-z]+)/?([A-Za-z]+)?" % code_pools
-        match = re.search(pattern.replace("/", os.sep), cwd)
+        code_pools = "(%s)" % ("|".join(settings.code_pools),)
+        pattern = os.path.join("", "(app)", "code", code_pools,
+                               "([A-Za-z]+)", "?([A-Za-z]+)?")
+        match = re.search(pattern, cwd)
         try:
             self.code_pool = match.group(2)
             self.namespace = match.group(3)
