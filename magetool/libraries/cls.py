@@ -1,7 +1,8 @@
 import os
+from string import Template
 
 from magetool.libraries.command import Command
-from string import Template
+from magetool.libraries.util import abbreviate
 
 class Class(Command):
     """Base class for Mage classes, e.g., blocks, controllers, and models."""
@@ -30,12 +31,13 @@ class Class(Command):
 
     def _create_class(self, name, superclass):
         """Create a skeleton PHP class."""
-        dest = self._prepare_path_to(name)
-        if os.path.isfile(dest):
-            raise OSError("File exists: " + dest)
-        dest = open(dest, "w")
+        path = self._prepare_path_to(name)
+        if os.path.isfile(path):
+            raise OSError("File exists: " + path)
+        dest = open(path, "w")
         dest.write(self._fill_template(name, superclass))
         dest.close()
+        print "Created file " + abbreviate(path, 55)
 
     def _prepare_path_to(self, name):
         """Return the path to where on the file system name should reside."""

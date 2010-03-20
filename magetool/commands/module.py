@@ -4,40 +4,53 @@ from string import Template
 from xml.dom.minidom import parseString
 
 import magetool.settings as settings
-from magetool.libraries.util import warn
+from magetool.libraries.util import abbreviate, error, warn
 from magetool.templates.config_xml import config_xml
 from magetool.templates.regfile import regfile
 
-NAME_CASE_WARNING = ("Internal Mage methods expect namespaces " +
-                     "and module names to be capitalized. " +
-                     "Violating this convention will prevent " +
-                     "Mage from loading the module.")
-
 class Module:
+
+    NAME_CASE_WARNING = ("Internal Mage methods expect namespaces " +
+                         "and module names to be capitalized. " +
+                         "Violating this convention will prevent " +
+                         "Mage from loading the module.")
+
+    CODE_DIR_INDEX = -3 # Expected position of the `code/' directory,
+                        # assuming a path such as the following:
+                        # `/path/to/mage/app/code/<code_pool>/<namespace>'
+
     def __init__(self):
-        """Initialize the module by retrieving its code pool, namespace, and
+        """Initialize the module."""
+        self._configure()
+        self._check_case_convention()
+        self._files_created = []
+
+    def _configure(self):
+        """Configure the module by guessing its code pool, namespace, and
         name.
 
         """
-        cwd = os.getcwd()
-        code_pools = "(%s)" % ("|".join(settings.code_pools),)
-        pattern = os.path.join("", "(app)", "code", code_pools,
-                               "([A-Za-z]+)", "?([A-Za-z]+)?")
-        match = re.search(pattern, cwd)
-        try:
-            self.code_pool = match.group(2)
-            self.namespace = match.group(3)
-            self.name = match.group(4)
-            self.path = cwd[:match.end()]
-            self.app_path = cwd[:match.end(1)]
-            self.cfg_path = os.path.join(self.path, "etc", "config.xml")
+        self.path = self._guess_module_path(os.getcwd())
+        dirs = self.path.split(os.sep)
+        self.name = dirs.pop() if dirs[self.CODE_DIR_INDEX] != "code" else None
+        self.code_pool, self.namespace = dirs[-2:]
+        self.app_path = os.sep.join(dirs[:self.CODE_DIR_INDEX])
+        self.cfg_path = os.path.join(self.path, "etc", "config.xml")
 
-            if not self.namespace[0].isupper():
-                warn(NAME_CASE_WARNING)
-            if not self.name is None and not self.name[0].isupper():
-                warn(NAME_CASE_WARNING)
-        except AttributeError:
-            raise EnvironmentError("Wrong execution directory.")
+    def _guess_module_path(self, path):
+        sep = "/" if os.sep == "/" else "\\\\"
+        pat = "/app/code/(%s)/([A-Za-z]+)/?([A-Za-z]+)?".replace("/", sep) % (
+            "|".join(settings.code_pools))
+        match = re.search(pat, path)
+        if match is None:
+            error("Found neither module nor namespace on path `%s'" % (path,))
+        return path[:match.end()]
+
+    def _check_case_convention(self):
+        if not self.namespace[0].isupper():
+            warn(self.NAME_CASE_WARNING)
+        if not self.name is None and not self.name[0].isupper():
+            warn(self.NAME_CASE_WARNING)
 
     def create(self, name):
         """Create a directory structure, a configuration file, and an
@@ -46,21 +59,24 @@ class Module:
 
         """
         if not name[0].isupper():
-            warn(NAME_CASE_WARNING)
+            warn(self.NAME_CASE_WARNING)
         self.name = name
-        os.mkdir(self.name)
+        self._mkdir(self.name)
         for directory in settings.directories:
-            os.mkdir(os.path.join(self.name, directory))
+            self._mkdir(os.path.join(self.name, directory))
         self._create_config()
         self._create_regfile()
+        self._print_feedback()
+
+    def _mkdir(self, path):
+        os.mkdir(path)
+        self._files_created.append(os.path.abspath(path))
 
     def _create_config(self):
         template = Template(config_xml).substitute(namespace=self.namespace,
                                                    module_name=self.name)
         parseString(template) # Syntax check
-        dest = open(os.path.join(self.name, "etc", "config.xml"), "w")
-        dest.write(template)
-        dest.close()
+        self._write(os.path.join(self.name, "etc", "config.xml"), template)
 
     def _create_regfile(self):
         """Create a file to register the module with Mage. This file makes
@@ -71,11 +87,20 @@ class Module:
                                                 module_name=self.name,
                                                 code_pool=self.code_pool)
         parseString(template) # Syntax check
-        path = os.path.join(self.app_path, "etc", "modules",
-                            "%s_%s.xml" % (self.namespace, self.name))
+        self._write(os.path.join(self.app_path, "etc", "modules",
+                                "%s_%s.xml" % (self.namespace, self.name)),
+                   template)
+
+    def _write(self, path, str):
         dest = open(path, "w")
-        dest.write(template)
+        dest.write(str)
         dest.close()
+        self._files_created.append(os.path.abspath(path))
+
+    def _print_feedback(self):
+        print "Created %d files:" % (len(self._files_created),)
+        for f in self._files_created:
+            print abbreviate(f)
 
     @staticmethod
     def help():

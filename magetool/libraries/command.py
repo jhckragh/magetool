@@ -1,6 +1,7 @@
 from lxml import etree
 
 from magetool.commands.module import Module
+from magetool.libraries.util import abbreviate
 
 class Command:
     """Base class for magetool commands."""
@@ -30,6 +31,7 @@ class Command:
         dest.write('<?xml version="1.0"?>\n')
         dest.write(etree.tostring(elem, pretty_print=True))
         dest.close()
+        print "Updated file " + abbreviate(self.module.cfg_path, 55)
 
     def _get_template(self):
         """Import the template file for the class. (We assume that the

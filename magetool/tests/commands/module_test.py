@@ -15,15 +15,6 @@ class ModuleTest(unittest.TestCase):
         os.chdir(self.old_cwd)
         del self.module
 
-    def test_init_throws_exception(self):
-        os.chdir("..")
-        try:
-            Module()
-        except EnvironmentError:
-            pass
-        else:
-            self.fail("Did not see EnvironmentError")
-
     def test_init_works_in_block(self):
         os.chdir(os.path.join("Bar", "Block"))
         try:
