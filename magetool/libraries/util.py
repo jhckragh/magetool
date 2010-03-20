@@ -24,7 +24,7 @@ def warn(msg):
     _err(msg, "warning")
 
 def abbreviate(path, width=70):
-    if path <= width:
+    if len(path) <= width:
         return path
     mid = (width - 3) / 2
     left = path[:mid].rfind(os.sep) + 1
