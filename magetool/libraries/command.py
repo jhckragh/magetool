@@ -31,7 +31,7 @@ class Command:
         dest.write('<?xml version="1.0"?>\n')
         dest.write(etree.tostring(elem, pretty_print=True))
         dest.close()
-        print "Updated file " + abbreviate(self.module.cfg_path, 55)
+        print "Updated file " + abbreviate(self.module.cfg_path, 65)
 
     def _get_template(self):
         """Import the template file for the class. (We assume that the

@@ -37,7 +37,7 @@ class Class(Command):
         dest = open(path, "w")
         dest.write(self._fill_template(name, superclass))
         dest.close()
-        print "Created file " + abbreviate(path, 55)
+        print "Created file " + abbreviate(path, 65)
 
     def _prepare_path_to(self, name):
         """Return the path to where on the file system name should reside."""
