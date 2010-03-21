@@ -55,16 +55,19 @@ Here's a sample Magetool workflow:
  2. This defines a skeleton PHP class in controllers/IndexController.php
    and updates the module's configuration file accordingly.
 
+See the file docs/usage.txt for more on what Magetool can do.
+
 
 ## Discussion and support ##
 
-Please send feedback and bug reports to jhckragh [at] gmail [dot] com.
+Found a bug? Let me know by creating a new issue on GitHub[4]. Feedback
+is always welcome; drop me a line at jhckragh [at] gmail [dot] com.
 
 
 ## Bugs ##
 
 Overriding abstract classes is unsupported. (For details on how to do
-this manually, see the community forum[4].)
+this manually, see the community forum[5].)
 
 
 ## Links ##
@@ -72,7 +75,8 @@ this manually, see the community forum[4].)
 [1] <http://jhckragh.github.com/magetool/>
 [2] <http://www.magentocommerce.com/>
 [3] <http://codespeak.net/lxml/index.html#download>
-[4] <http://www.magentocommerce.com/boards/viewthread/18494/#t151509>
+[4] <http://github.com/jhckragh/magetool/issues>
+[5] <http://www.magentocommerce.com/boards/viewthread/18494/#t151509>
 
 
 ## Legal ##

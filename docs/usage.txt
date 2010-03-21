@@ -82,7 +82,7 @@ either helper or model, respectively.)
 This will Do The Right Thing. In the case of blocks and helpers, it
 will define a skeleton PHP class in Block/ProductViewCase.php or
 Helper/ProductViewCase.php. In addition, it will update the module's
-configuration file to tell Mage that the module has one or more
+configuration file to tell Magento that the module has one or more
 Block/Helper classes, e.g.:
 
     ...
@@ -170,7 +170,7 @@ Mage_Catalog_Helper_Image.
 Overriding classes
 ------------------
 
-To tell Mage that a created class should override its superclass, use
+To tell Magento that a created class should override its superclass, use
 the -o or --override option.
 
 To illustrate, the following invocation will define a block in

@@ -1,0 +1,175 @@
+Developing Magetool
+===================
+
+This document explains how Magetool works. The target audience is
+developers who would like to modify or extend Magetool.
+
+
+Getting an overview
+-------------------
+
+Here's a short rundown of the code base:
+
+    commands/   - Commands such as module, block or controller.
+    __init__.py - Empty file necessary to make package import work.
+    libraries/  - Shared classes and functions for use in commands.
+    magetool    - Launcher.
+    settings.py - Various settings for use in commands and libraries.
+    templates/  - Templates which are used by commands to create skeleton files.
+    tests/      - Unit tests and utility modules for use in unit tests.
+
+
+Starting out
+------------
+
+Magetool's main entry point is the magetool script. Roughly
+speaking, this script is responsible for translating CLI invocations
+into Python statements. To understand how it does this, let's look at
+the following invocation:
+
+    magetool -os Mage_Tag_Block_Popular create block Popular
+
+First, the script uses optparse to parse the arguments and the
+options given on the command line. The arguments are stored in a list
+while the options are stored in a dictionary:
+
+    ["create", "block", "Popular"] # arguments
+    {"override": True, "superclass": "Mage_Tag_Block_Popular"} # options
+
+Second, the second argument (block) is interpreted as the name of a
+python module in the commands/ directory. The script tries to import
+a certain class from this module: the name of the class is the module
+name, capitalized:
+
+    from magetool.commands.block import Block as cls
+
+If it succeeds, it creates an instance of this class, passing the
+contents of the options dictionary to the class's constructor:
+
+    obj = cls(**{"override": True, "superclass": "Mage_Tag_Block_Popular"})
+
+Finally, it interprets the first argument (create) as a method name.
+It tries to call this method on the class instance. If more than two
+arguments have been supplied on the command line, they are passed as
+arguments to the method:
+
+    getattr(obj, create)(*args[2:])
+
+
+Understanding commands and actions
+----------------------------------
+
+In Magetool **command** has a special meaning. A command models a
+concept from the problem domain such as a module or a
+controller. Magetool currently includes the following commands:
+
+ * block
+ * controller
+ * helper
+ * layout
+ * model
+ * module
+
+Each command supplies a set of operations which can be invoked from
+the command line. These are called **actions**. For instance, the
+model command supplies three actions: create, register, and
+help.
+
+Each command corresponds to a Python class defined in a module in the
+commands/ directory. The model command, for example, corresponds to
+the Model class defined in commands/model.py. The class's public
+methods comprise the command's actions. Since the Model class has
+three public methods, it supplies three actions.
+
+(Technically Python doesn't support the notion of a public method. By
+convention, however, methods whose names start with an underscore are
+considered private; others are considered public.)
+
+
+Looking inside a command
+------------------------
+
+The simplest command is the layout command. Like the other commands
+(except for module), its class is a subclass of the Command library
+class. Consider the following UML diagram:
+
+     ______________                 ____________
+    |   Command    |               |   Module   |
+    |--------------|               |------------|
+    | type         |             1 | name       |
+    | template     |.^.____________| app_path   |
+    | module       | `             |------------|
+    |--------------|               |            |
+    | get_config() |                ------------
+    | put_config() |
+     --------------
+          .^.
+           |
+           |
+      ____________
+     |   Layout   |
+     |------------|
+     |            |
+     |------------|
+     | create()   |
+     | register() |
+     | help()     |
+      ------------
+
+Through the Command class the Layout class has access to a
+Module object. This object models the Magento module the user is
+working on. As such, it has several useful fields, e.g.,
+
+ * name - The name of the module.
+ * app_path - The path to the Magento installation's app/ directory.
+
+Command classes use these fields when carrying out their actions. The
+layout command's register action, for instance, uses the Module
+object's name attribute when updating the module's configuration
+file.
+
+To read the configuration file, the action uses the get_config()
+method inherited from Command. Similarly, to write to the file the
+action uses the put_config() method.
+
+Finally, all commands have templates. Templates form the basis of the
+skeleton files commands create. For example, the layout command's
+create action creates a skeleton layout file in the Magento
+installation's app/design/frontend/default/default/layout/
+directory with the following content:
+
+    <?xml version="1.0"?>
+    <layout version="0.1.0">
+    
+    </layout>
+
+As mentioned above, templates are stored in the templates/
+directory. The Command class has a method, _get_template() which
+takes care of loading a command's template. This method makes two
+assumptions:
+
+ 1. The template file is named after the command (e.g., the template
+    file for the layout command is called layout.py). Specifically,
+    the name of the template file is the name of the command's class,
+    lowercased (referred to in the code as the command's **type**).
+
+ 2. The template file is a Python module that contains a global
+    variable called string.
+
+
+Summing up
+----------
+
+ * The magetool script is responsible for executing operations
+   requested on the command line. The script does this by dispatching
+   to commands.
+
+ * Commands are implemented as Python classes residing in the
+   commands/ directory. A command supplies actions.
+
+ * Magetool's essential functionality is realised through
+   actions. Actions are implemented as class methods.
+
+ * Each command has a template. A template is a Python module residing
+   in the templates/ directory which contains a variable called
+   string.
